@@ -55,6 +55,7 @@ public class VideoOutput {
 	}
 	
 	private class VideoOutputPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
 		private Image image;
 		private Dimension size;
 		
