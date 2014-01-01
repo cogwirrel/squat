@@ -25,7 +25,7 @@ public class Squat {
 		BackgroundSubtractorMOG backgroundSubtractor = new BackgroundSubtractorMOG(10, 2, 0.1);
 		Mat mask = new Mat();
 		
-		int i = 0;
+		int frameNumber = 0;
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
 			
@@ -34,8 +34,8 @@ public class Squat {
 			videoOutput.show(frame);
 			videoOutput2.show(mask);
 			
-			System.out.println(i);
-			i++;
+			System.out.println(frameNumber);
+			frameNumber++;
 		}
 		
 		videoOutput.close();
