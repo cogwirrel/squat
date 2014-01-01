@@ -2,9 +2,8 @@ package squat;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.video.BackgroundSubtractorMOG;
-import org.opencv.video.BackgroundSubtractorMOG2;
 
+import squat.model.Model;
 import squat.utils.VideoInput;
 import squat.utils.VideoOutput;
 
@@ -20,26 +19,21 @@ public class Squat {
 		int height = videoInput.getHeight();
 		
 		VideoOutput videoOutput = new VideoOutput("Test", width, height);
-		VideoOutput videoOutput2 = new VideoOutput("Mask", width, height);
-		
-		BackgroundSubtractorMOG backgroundSubtractor = new BackgroundSubtractorMOG(10, 2, 0.1);
-		Mat mask = new Mat();
+		Model model = new Model();
 		
 		int frameNumber = 0;
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
 			
-			backgroundSubtractor.apply(frame, mask);
-			
 			videoOutput.show(frame);
-			videoOutput2.show(mask);
+			videoOutput.show(model);
+			videoOutput.draw();
 			
 			System.out.println(frameNumber);
 			frameNumber++;
 		}
 		
 		videoOutput.close();
-		videoOutput2.close();
 		
 		System.out.println("done");
 

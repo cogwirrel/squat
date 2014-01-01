@@ -1,5 +1,6 @@
 package squat.utils;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,6 +11,8 @@ import javax.swing.SwingUtilities;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+
+import squat.model.Model;
 
 public class VideoOutput {
 	private JFrame frame;
@@ -32,6 +35,13 @@ public class VideoOutput {
 	
 	public void show(Mat m) throws Exception {
 		videoOutputPanel.setImage(toBufferedImage(m));
+	}
+	
+	public void show(Model m) {
+		videoOutputPanel.setModel(m);
+	}
+	
+	public void draw() {
 		videoOutputPanel.repaint();
 	}
 	
@@ -57,12 +67,17 @@ public class VideoOutput {
 	private class VideoOutputPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 		private Image image;
+		private Model model;
 		private Dimension size;
 		
 		public VideoOutputPanel(int width, int height) {
 			size = new Dimension(width, height);
 		}
 		
+		public void setModel(Model m) {
+			model = m;
+		}
+
 		public void setImage(Image image) {
 			this.image = image;
 		}
@@ -78,6 +93,13 @@ public class VideoOutput {
 
 			if(image != null) {
 				g.drawImage(image.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_FAST), 0, 0, null);
+			}
+			
+			if(model != null) {
+				Color originalColor = g.getColor();
+				g.setColor(Color.GREEN);
+				model.draw(g);
+				g.setColor(originalColor);
 			}
 		}
 	}
