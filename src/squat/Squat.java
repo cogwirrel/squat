@@ -2,8 +2,13 @@ package squat;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.video.Video;
 
 import squat.model.Model;
+import squat.utils.BackgroundSubtractor;
+import squat.utils.Stabiliser;
 import squat.utils.VideoInput;
 import squat.utils.VideoOutput;
 
@@ -21,11 +26,22 @@ public class Squat {
 		VideoOutput videoOutput = new VideoOutput("Test", width, height);
 		Model model = new Model();
 		
+		Mat firstFrame = new Mat();
+		if(videoInput.hasNextFrame()) {
+			firstFrame = videoInput.getNextFrame();
+		}
+		
+		Stabiliser stabiliser = new Stabiliser(firstFrame);
+		BackgroundSubtractor bg = new BackgroundSubtractor();
+		
 		int frameNumber = 0;
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
 			
-			videoOutput.show(frame);
+			Mat smoothedFrame = stabiliser.stabilise(frame);
+			Mat mask = bg.subtract(smoothedFrame);
+			
+			videoOutput.show(mask);
 			videoOutput.show(model);
 			videoOutput.draw();
 			
