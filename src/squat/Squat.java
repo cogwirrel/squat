@@ -14,6 +14,7 @@ import org.opencv.video.Video;
 
 import squat.model.Model;
 import squat.utils.BackgroundSubtractor;
+import squat.utils.FigureDetector;
 import squat.utils.Stabiliser;
 import squat.utils.VideoTools;
 import squat.utils.VideoInput;
@@ -33,28 +34,32 @@ public class Squat {
 		VideoOutput videoOutput = new VideoOutput("Test", width, height);
 		Model model = new Model();
 		
+		// Get the first 600 frames quickly as it's all boring stuff
+		int frameNumber = 0;
+		while(frameNumber < 600 && videoInput.hasNextFrame()) {
+			videoInput.getNextFrame();
+			frameNumber++;
+		}
+		
+		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
-			firstFrame = VideoTools.toGreyscale(videoInput.getNextFrame());
+			firstFrame = videoInput.getNextFrame();
 		}
 		
 		Stabiliser stabiliser = new Stabiliser(firstFrame);
+		FigureDetector fd = new FigureDetector();
 		BackgroundSubtractor bg = new BackgroundSubtractor();
 		
-		int frameNumber = 0;
+		
 		while(videoInput.hasNextFrame()) {
-			Mat frame = VideoTools.toGreyscale(videoInput.getNextFrame());
+			Mat frame = videoInput.getNextFrame();
 			
-			Mat smoothedFrame = stabiliser.stabilise(frame);
-			Mat edges = new Mat();
+			Mat smoothedFrame = frame;//stabiliser.stabilise(frame);
 			
-			Imgproc.Canny(smoothedFrame, edges, 100, 300);
-			
-			List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-			Imgproc.findContours(edges, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-			
-			Mat drawing = Mat.zeros(edges.size(), edges.type());
-			Imgproc.drawContours(drawing, contours, -1, new Scalar(255, 255, 0), 5);
+			Mat drawing = fd.detect(smoothedFrame);
+			Mat res = new Mat();
+			//Core.bitwise_and(smoothedFrame, drawing, res);
 			
 			videoOutput.show(drawing);
 			videoOutput.show(model);
