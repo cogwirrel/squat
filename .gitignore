@@ -2,4 +2,4 @@ out
 bin
 .project
 .classpath
-hs_err_*
+hs_err_*.log
