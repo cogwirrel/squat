@@ -58,8 +58,6 @@ public class Squat {
 			Mat smoothedFrame = frame;//stabiliser.stabilise(frame);
 			
 			Mat drawing = fd.detect(smoothedFrame);
-			Mat res = new Mat();
-			//Core.bitwise_and(smoothedFrame, drawing, res);
 			
 			videoOutput.show(drawing);
 			videoOutput.show(model);

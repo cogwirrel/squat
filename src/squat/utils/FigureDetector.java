@@ -11,13 +11,12 @@ import org.opencv.imgproc.Imgproc;
 
 public class FigureDetector {
 	public Mat detect(Mat frame) {
-		Mat edges = new Mat();
+		Mat edges = new Mat(frame.size(), frame.type());
 		
 		Mat hsv = VideoTools.toHsv(frame);
+		Imgproc.blur(hsv, hsv, new Size(2,2));
 		
 		Imgproc.Canny(hsv, edges, 100, 300);
-		
-		edges.convertTo(edges, frame.type());
 		
 		int sz = 3;
 		Imgproc.dilate(edges, edges, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(sz,sz)));
@@ -32,10 +31,6 @@ public class FigureDetector {
 			drawing = largestObject(drawing);
 		}
 		
-		drawing.convertTo(drawing, frame.type());
-		
-		System.out.println(drawing.type());
-		
 		return drawing;
 	}
 	
@@ -46,6 +41,7 @@ public class FigureDetector {
 		int largestContourIdx = largestContourIndex(contours);
 		
 		Mat drawing = Mat.zeros(frame.size(), frame.type());
+
 		Imgproc.drawContours(drawing, contours, largestContourIdx, new Scalar(255, 255, 255), -1);
 		return drawing;
 	}
