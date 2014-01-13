@@ -15,6 +15,7 @@ import org.opencv.video.Video;
 import squat.model.Model;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.FigureDetector;
+import squat.utils.Skeletoniser;
 import squat.utils.Stabiliser;
 import squat.utils.VideoTools;
 import squat.utils.VideoInput;
@@ -50,7 +51,7 @@ public class Squat {
 		Stabiliser stabiliser = new Stabiliser(firstFrame);
 		FigureDetector fd = new FigureDetector();
 		BackgroundSubtractor bg = new BackgroundSubtractor();
-		
+		Skeletoniser sk = new Skeletoniser();
 		
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
@@ -58,6 +59,8 @@ public class Squat {
 			Mat smoothedFrame = frame;//stabiliser.stabilise(frame);
 			
 			Mat drawing = fd.detect(smoothedFrame);
+			
+			drawing = sk.skeletonise(drawing);
 			
 			videoOutput.show(drawing);
 			videoOutput.show(model);
