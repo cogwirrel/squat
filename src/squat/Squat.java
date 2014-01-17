@@ -13,6 +13,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.video.Video;
 
 import squat.model.Model;
+import squat.optimization.ModelFitter;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.FigureDetector;
 import squat.utils.Skeletoniser;
@@ -33,6 +34,7 @@ public class Squat {
 		int height = videoInput.getHeight();
 		
 		VideoOutput videoOutput = new VideoOutput("Test", width, height);
+		VideoOutput videoOutput2 = new VideoOutput("Test2", width, height);
 		Model model = new Model();
 		
 		// Get the first 600 frames quickly as it's all boring stuff
@@ -52,6 +54,7 @@ public class Squat {
 		FigureDetector fd = new FigureDetector();
 		BackgroundSubtractor bg = new BackgroundSubtractor();
 		Skeletoniser sk = new Skeletoniser();
+		ModelFitter fitter = new ModelFitter();
 		
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
@@ -60,11 +63,16 @@ public class Squat {
 			
 			Mat drawing = fd.detect(smoothedFrame);
 			
-			drawing = sk.skeletonise(drawing);
+			//drawing = sk.skeletonise(drawing);
 			
-			videoOutput.show(drawing);
+			model = fitter.fit(model, drawing);
+			
+			videoOutput.show(frame);
 			videoOutput.show(model);
 			videoOutput.draw();
+			
+			videoOutput2.show(drawing);
+			videoOutput2.draw();
 			
 			System.out.println(frameNumber);
 			frameNumber++;

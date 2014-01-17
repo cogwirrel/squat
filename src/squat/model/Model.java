@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.opencv.core.Mat;
+
 import squat.utils.Pair;
 
 public class Model {
@@ -22,21 +24,36 @@ public class Model {
 	}
 	
 	private Map<Joint, Point> joints;
+
 	private List<Pair<Joint, Joint>> connections;
 	
 	public Model() {
+		// Create an array of zeros
+		double[] inJoints = new double[Joint.values().length*2];
+		makeModel(inJoints);
+		setJointsToPositionForDrawTest();
+	}
+	
+	public Model(double[] inJoints) {
+		makeModel(inJoints);
+	}
+	
+	public Map<Joint, Point> getJoints() {
+		return joints;
+	}
+	
+	private void makeModel(double[] inJoints) {
 		joints = new HashMap<Joint, Point>();
 		
-		joints.put(Joint.ANKLE, new Point(0, 0));
-		joints.put(Joint.KNEE, new Point(0, 0));
-		joints.put(Joint.HIP, new Point(0, 0));
-		joints.put(Joint.SHOULDER, new Point(0, 0));
-		joints.put(Joint.HEAD, new Point(0, 0));
-		joints.put(Joint.ELBOW, new Point(0, 0));
-		joints.put(Joint.HAND, new Point(0, 0));
+		Joint[] allJoints = Joint.values();
+		for(int i = 0; i < allJoints.length; i++) {
+			joints.put(allJoints[i], new Point((int)inJoints[2*i], (int)inJoints[2*i+1]));
+		}
 		
-		setJointsToPositionForDrawTest();
-		
+		connectJoints();
+	}
+	
+	private void connectJoints() {
 		connections = new ArrayList<Pair<Joint, Joint>>();
 		
 		connections.add(new Pair<Joint, Joint>(Joint.ANKLE, Joint.KNEE));
@@ -68,8 +85,6 @@ public class Model {
 		
 		joints.get(Joint.HAND).x = 60;
 		joints.get(Joint.HAND).y = 100;
-		
-		
 	}
 
 	public void draw(Graphics g) {
@@ -78,5 +93,22 @@ public class Model {
 			Point to = joints.get(connection.r);
 			g.drawLine(from.x, from.y, to.x, to.y);
 		}
+	}
+	
+	/**
+	 * @return the model represented as an array of doubles
+	 */
+	public double[] toDoubles() {
+		Joint[] allJoints = Joint.values();
+		
+		double[] doubles = new double[allJoints.length*2];
+		
+		for(int i = 0; i < allJoints.length; i++) {
+			Point p = joints.get(allJoints[i]);
+			doubles[2*i] = p.getX();
+			doubles[2*i+1] = p.getY();
+		}
+		
+		return doubles;
 	}
 }
