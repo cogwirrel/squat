@@ -29,20 +29,11 @@ public class Model {
 	
 	public Model() {
 		// Create an array of zeros
-		double[] inJoints = new double[Joint.values().length*2];
-		makeModel(inJoints);
+		this(new double[Joint.values().length*2]);
 		setJointsToPositionForDrawTest();
 	}
 	
 	public Model(double[] inJoints) {
-		makeModel(inJoints);
-	}
-	
-	public Map<Joint, Point> getJoints() {
-		return joints;
-	}
-	
-	private void makeModel(double[] inJoints) {
 		joints = new HashMap<Joint, Point>();
 		
 		Joint[] allJoints = Joint.values();
@@ -51,6 +42,10 @@ public class Model {
 		}
 		
 		connectJoints();
+	}
+	
+	public Map<Joint, Point> getJoints() {
+		return joints;
 	}
 	
 	private void connectJoints() {
