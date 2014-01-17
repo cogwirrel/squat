@@ -1,5 +1,7 @@
 package squat.optimization;
 
+import java.util.List;
+
 import org.apache.commons.math3.optim.InitialGuess;
 import org.apache.commons.math3.optim.MaxEval;
 import org.apache.commons.math3.optim.MaxIter;
@@ -12,12 +14,14 @@ import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.NelderMeadSimplex
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizer;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 
 import squat.model.Model;
 
 public class ModelFitter {
-	public Model fit(Model model, Mat frame) {
-		ModelFitFunction fitFunction = new ModelFitFunction(frame);
+	public Model fit(Model model, Mat frame, List<MatOfPoint> contours) {
+		
+		ModelFitFunction fitFunction = new ModelFitFunction(frame, contours);
 		
 		double[] initialModel = model.toDoubles();
 		

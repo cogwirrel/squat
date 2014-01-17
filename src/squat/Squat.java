@@ -16,6 +16,7 @@ import squat.model.Model;
 import squat.optimization.ModelFitter;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.FigureDetector;
+import squat.utils.Pair;
 import squat.utils.Skeletoniser;
 import squat.utils.Stabiliser;
 import squat.utils.VideoTools;
@@ -61,17 +62,19 @@ public class Squat {
 			
 			Mat smoothedFrame = frame;//stabiliser.stabilise(frame);
 			
-			Mat drawing = fd.detect(smoothedFrame);
+			Pair<Mat, List<MatOfPoint>> detection = fd.detect(smoothedFrame);
 			
+			Mat drawing = detection.l;
 			//drawing = sk.skeletonise(drawing);
 			
-			model = fitter.fit(model, drawing);
+			model = fitter.fit(model, drawing, detection.r);
 			
 			videoOutput.show(frame);
 			videoOutput.show(model);
 			videoOutput.draw();
 			
 			videoOutput2.show(drawing);
+			videoOutput2.show(model);
 			videoOutput2.draw();
 			
 			System.out.println(frameNumber);

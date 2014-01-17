@@ -10,7 +10,7 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class FigureDetector {
-	public Mat detect(Mat frame) {
+	public Pair<Mat, List<MatOfPoint>> detect(Mat frame) {
 		Mat edges = new Mat(frame.size(), frame.type());
 		
 		Mat hsv = VideoTools.toHsv(frame);
@@ -22,19 +22,19 @@ public class FigureDetector {
 		Imgproc.dilate(edges, edges, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(sz,sz)));
 		Imgproc.erode(edges, edges, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(sz,sz)));
 		
-		Mat drawing = largestObject(edges);
+		Pair<Mat, List<MatOfPoint>> drawing = largestObject(edges);
 		
 		for(int i = 0; i < 4; i++) {
-			Imgproc.erode(drawing, drawing, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(sz,sz)));
-			Imgproc.dilate(drawing, drawing, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(sz,sz)));
+			Imgproc.erode(drawing.l, drawing.l, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(sz,sz)));
+			Imgproc.dilate(drawing.l, drawing.l, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(sz,sz)));
 			
-			drawing = largestObject(drawing);
+			drawing = largestObject(drawing.l);
 		}
 		
 		return drawing;
 	}
 	
-	private Mat largestObject(Mat frame) {
+	private Pair<Mat, List<MatOfPoint>> largestObject(Mat frame) {
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Imgproc.findContours(frame, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 		
@@ -43,7 +43,7 @@ public class FigureDetector {
 		Mat drawing = Mat.zeros(frame.size(), frame.type());
 
 		Imgproc.drawContours(drawing, contours, largestContourIdx, new Scalar(255, 255, 255), -1);
-		return drawing;
+		return new Pair<Mat, List<MatOfPoint>>(drawing, contours);
 	}
 	
 	private int largestContourIndex(List<MatOfPoint> contours) {
