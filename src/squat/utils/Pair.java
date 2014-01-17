@@ -1,11 +1,12 @@
 package squat.utils;
 
-public class Pair<R, L> {
-	public R r;
+public class Pair<L, R> {
 	public L l;
+	public R r;
 	
-	public Pair(R r, L l) {
-		this.r = r;
+	
+	public Pair(L l, R r) {
 		this.l = l;
+		this.r = r;
 	}
 }
