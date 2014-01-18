@@ -82,6 +82,7 @@ public class Squat {
 		}
 		
 		videoOutput.close();
+		videoOutput2.close();
 		
 		System.out.println("done");
 

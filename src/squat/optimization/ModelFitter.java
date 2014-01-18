@@ -21,7 +21,7 @@ import squat.model.Model;
 public class ModelFitter {
 	public Model fit(Model model, Mat frame, List<MatOfPoint> contours) {
 		
-		ModelFitFunction fitFunction = new ModelFitFunction(frame, contours);
+		ModelFitFunction fitFunction = new ModelFitFunction(model, frame, contours);
 		
 		double[] initialModel = model.toDoubles();
 		
@@ -33,8 +33,8 @@ public class ModelFitter {
 		PointValuePair p = optim.optimize(
 				nelderMead,
 				new InitialGuess(initialModel),
-				new MaxEval(100),
-				new MaxIter(100),
+				new MaxEval(10000),
+				new MaxIter(10000),
 				GoalType.MINIMIZE,
 				new ObjectiveFunction(fitFunction));
 		

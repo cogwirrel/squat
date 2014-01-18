@@ -17,10 +17,12 @@ public class ModelFitFunction implements MultivariateFunction {
 
 	private Mat frame;
 	private List<MatOfPoint> contours;
+	private Model initialModel;
 	
-	public ModelFitFunction(Mat frame, List<MatOfPoint> contours) {
+	public ModelFitFunction(Model initialModel, Mat frame, List<MatOfPoint> contours) {
 		this.frame = frame;
 		this.contours = contours;
+		this.initialModel = initialModel;
 	}
 	
 	@Override
@@ -30,13 +32,30 @@ public class ModelFitFunction implements MultivariateFunction {
 		
 		Joint[] allJoints = Joint.values();
 		double totalDistance = 0;
-		for(int i = 0; i < allJoints.length; i++) {
+		for(Joint joint : allJoints) {
 			MatOfPoint2f c = new MatOfPoint2f(contours.get(0).toArray());
-			Point p = model.getJoints().get(allJoints[i]);
+			Point p = model.getJoints().get(joint);
+			
+			// Get the distance from the joint to the silhouette
 			double dist = Imgproc.pointPolygonTest(c, new org.opencv.core.Point(p.getX(), p.getY()), true);
-			totalDistance -= dist;
-			System.out.println(dist);
+			
+			// We want distance outside polygon to be +ve
+			dist = -dist;
+			
+			// If it's inside, don't penalise
+			if(dist <= 0) {
+				dist = 0;
+			}
+			
+			totalDistance += dist;
 		}
+		
+		double propDiff = initialModel.proportionDifference(model);
+		
+		System.out.println("Prop: " + propDiff);
+		System.out.println("Dist: " + totalDistance);
+		
+		totalDistance += Math.sqrt(propDiff);
 		
 		return totalDistance;
 	}
@@ -45,7 +64,14 @@ public class ModelFitFunction implements MultivariateFunction {
 		Moments m = Imgproc.moments(frame);
 		Point centre = new Point((int)(m.get_m10()/m.get_m00()), (int)(m.get_m01()/m.get_m00()));
 		
-		return model.getJoints().get(Joint.SHOULDER).distanceSq(centre);
+		double distance = 0;
+		
+		Joint[] allJoints = Joint.values();
+		for(Joint joint : allJoints) {
+			distance += model.getJoints().get(joint).distance(centre);
+		}
+		
+		return distance;
 	}
 
 }

@@ -19,8 +19,8 @@ public class Model {
 		HIP,
 		SHOULDER,
 		HEAD,
-		ELBOW,
-		HAND,
+		//ELBOW,
+		//HAND,
 	}
 	
 	private Map<Joint, Point> joints;
@@ -55,8 +55,8 @@ public class Model {
 		connections.add(new Pair<Joint, Joint>(Joint.KNEE, Joint.HIP));
 		connections.add(new Pair<Joint, Joint>(Joint.HIP, Joint.SHOULDER));
 		connections.add(new Pair<Joint, Joint>(Joint.SHOULDER, Joint.HEAD));
-		connections.add(new Pair<Joint, Joint>(Joint.SHOULDER, Joint.ELBOW));
-		connections.add(new Pair<Joint, Joint>(Joint.ELBOW, Joint.HAND));
+		//connections.add(new Pair<Joint, Joint>(Joint.SHOULDER, Joint.ELBOW));
+		//connections.add(new Pair<Joint, Joint>(Joint.ELBOW, Joint.HAND));
 	}
 	
 	private void setJointsToPositionForDrawTest() {
@@ -75,11 +75,11 @@ public class Model {
 		joints.get(Joint.HEAD).x = 100;
 		joints.get(Joint.HEAD).y = 50;
 		
-		joints.get(Joint.ELBOW).x = 80;
-		joints.get(Joint.ELBOW).y = 150;
-		
-		joints.get(Joint.HAND).x = 60;
-		joints.get(Joint.HAND).y = 100;
+//		joints.get(Joint.ELBOW).x = 80;
+//		joints.get(Joint.ELBOW).y = 150;
+//		
+//		joints.get(Joint.HAND).x = 60;
+//		joints.get(Joint.HAND).y = 100;
 	}
 
 	public void draw(Graphics g) {
@@ -105,5 +105,32 @@ public class Model {
 		}
 		
 		return doubles;
+	}
+	
+	/**
+	 * @return the height of the model
+	 */
+	public double height() {
+		double h = 0;
+		
+		h += joints.get(Joint.HEAD).distance(joints.get(Joint.SHOULDER));
+		h += joints.get(Joint.SHOULDER).distance(joints.get(Joint.HIP));
+		h += joints.get(Joint.HIP).distance(joints.get(Joint.KNEE));
+		h += joints.get(Joint.KNEE).distance(joints.get(Joint.ANKLE));
+		
+		return h;
+	}
+	
+	public double proportionDifference(Model m) {
+		
+		Map<Joint, Point> theirJoints = m.getJoints();
+		
+		double difference = 0;
+		for(Pair<Joint, Joint> connection : connections) {
+			double ourDist = joints.get(connection.l).distance(joints.get(connection.r));
+			double theirDist = theirJoints.get(connection.l).distance(theirJoints.get(connection.r));
+			difference += Math.abs(theirDist - ourDist);
+		}
+		return difference;
 	}
 }
