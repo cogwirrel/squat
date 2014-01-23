@@ -21,7 +21,7 @@ import squat.utils.Skeletoniser;
 import squat.utils.Stabiliser;
 import squat.utils.VideoTools;
 import squat.utils.VideoInput;
-import squat.utils.VideoOutput;
+import squat.utils.VideoDisplay;
 
 public class Squat {
 
@@ -34,8 +34,8 @@ public class Squat {
 		int width = videoInput.getWidth();
 		int height = videoInput.getHeight();
 		
-		VideoOutput videoOutput = new VideoOutput("Test", width, height);
-		VideoOutput videoOutput2 = new VideoOutput("Test2", width, height);
+		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
+		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
 		Model model = new Model();
 		
 		// Get the first 600 frames quickly as it's all boring stuff
@@ -69,20 +69,20 @@ public class Squat {
 			
 			model = fitter.fit(model, drawing, detection.r);
 			
-			videoOutput.show(frame);
-			videoOutput.show(model);
-			videoOutput.draw();
+			videoDisplay.show(frame);
+			videoDisplay.show(model);
+			videoDisplay.draw();
 			
-			videoOutput2.show(drawing);
-			videoOutput2.show(model);
-			videoOutput2.draw();
+			videoDisplay2.show(drawing);
+			videoDisplay2.show(model);
+			videoDisplay2.draw();
 			
 			System.out.println(frameNumber);
 			frameNumber++;
 		}
 		
-		videoOutput.close();
-		videoOutput2.close();
+		videoDisplay.close();
+		videoDisplay2.close();
 		
 		System.out.println("done");
 

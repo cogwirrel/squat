@@ -14,11 +14,11 @@ import org.opencv.imgproc.Imgproc;
 
 import squat.model.Model;
 
-public class VideoOutput {
+public class VideoDisplay {
 	private JFrame frame;
 	private final VideoOutputPanel videoOutputPanel;
 	
-	public VideoOutput(final String name, final int width, final int height) {
+	public VideoDisplay(final String name, final int width, final int height) {
 		videoOutputPanel = new VideoOutputPanel(width, height);
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
