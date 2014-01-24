@@ -45,7 +45,6 @@ public class Squat {
 			frameNumber++;
 		}
 		
-		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
 			firstFrame = videoInput.getNextFrame();
