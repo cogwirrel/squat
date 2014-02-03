@@ -29,10 +29,10 @@ public class Squat {
 	
 	public static void main(String[] args) throws Exception {
 		
-		VideoInput videoInput = new VideoInput("/home/jack/squat_vids/good_squats_small.avi");
+		VideoInput videoInput = new VideoInput("/home/jack/squat_vids/stable/good_squats.avi");
 		
-		int width = videoInput.getWidth();
-		int height = videoInput.getHeight();
+		int height = videoInput.getWidth();
+		int width = videoInput.getHeight();
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
@@ -40,14 +40,14 @@ public class Squat {
 		
 		// Get the first 600 frames quickly as it's all boring stuff
 		int frameNumber = 0;
-		while(frameNumber < 600 && videoInput.hasNextFrame()) {
-			videoInput.getNextFrame();
-			frameNumber++;
-		}
+//		while(frameNumber < 600 && videoInput.hasNextFrame()) {
+//			videoInput.getNextFrame();
+//			frameNumber++;
+//		}
 		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
-			firstFrame = videoInput.getNextFrame();
+			Core.flip(videoInput.getNextFrame().t(), firstFrame, 1);
 		}
 		
 		Stabiliser stabiliser = new Stabiliser(firstFrame);
@@ -57,23 +57,26 @@ public class Squat {
 		ModelFitter fitter = new ModelFitter();
 		
 		while(videoInput.hasNextFrame()) {
-			Mat frame = videoInput.getNextFrame();
+			Mat frame = new Mat();
+			Core.flip(videoInput.getNextFrame().t(), frame, 1);
 			
-			Mat smoothedFrame = frame;//stabiliser.stabilise(frame);
+			//Mat smoothedFrame = frame;//stabiliser.stabilise(frame);
 			
-			Pair<Mat, List<MatOfPoint>> detection = fd.detect(smoothedFrame);
+			Mat drawing = bg.subtract(frame);
 			
-			Mat drawing = detection.l;
+			//Pair<Mat, List<MatOfPoint>> detection = fd.detect(smoothedFrame);
+			
+			//Mat drawing = detection.l;
 			//drawing = sk.skeletonise(drawing);
 			
-			model = fitter.fit(model, drawing, detection.r);
+			//model = fitter.fit(model, drawing, detection.r);
 			
 			videoDisplay.show(frame);
-			videoDisplay.show(model);
+			//videoDisplay.show(model);
 			videoDisplay.draw();
 			
 			videoDisplay2.show(drawing);
-			videoDisplay2.show(model);
+			//videoDisplay2.show(model);
 			videoDisplay2.draw();
 			
 			System.out.println(frameNumber);
