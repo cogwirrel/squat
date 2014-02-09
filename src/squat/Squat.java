@@ -15,6 +15,8 @@ import org.opencv.video.Video;
 import squat.model.Model;
 import squat.optimization.ModelFitter;
 import squat.utils.BackgroundSubtractor;
+import squat.utils.BackgroundSubtractorNaive;
+import squat.utils.BackgroundSubtractorOpenCV;
 import squat.utils.FigureDetector;
 import squat.utils.Pair;
 import squat.utils.Skeletoniser;
@@ -39,8 +41,12 @@ public class Squat {
 		Model model = new Model();
 		
 		int frameNumber = 0;
+		Mat firstFrame = new Mat();
+		if(videoInput.hasNextFrame()) {
+			firstFrame = videoInput.getNextFrame();
+		}
 		
-		BackgroundSubtractor bg = new BackgroundSubtractor();
+		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 40);
 		
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
