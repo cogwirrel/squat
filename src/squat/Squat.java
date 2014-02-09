@@ -29,10 +29,10 @@ public class Squat {
 	
 	public static void main(String[] args) throws Exception {
 		
-		VideoInput videoInput = new VideoInput("/home/jack/squat_vids/stable/good_squats.avi");
+		VideoInput videoInput = new VideoInput("/home/jack/squat_vids/stable/good_squats.avi", true);
 		
-		int height = videoInput.getWidth();
-		int width = videoInput.getHeight();
+		int width = videoInput.getWidth();
+		int height = videoInput.getHeight();
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
@@ -40,20 +40,10 @@ public class Squat {
 		
 		int frameNumber = 0;
 		
-		Mat firstFrame = new Mat();
-		if(videoInput.hasNextFrame()) {
-			Core.flip(videoInput.getNextFrame().t(), firstFrame, 1);
-		}
-		
-		Stabiliser stabiliser = new Stabiliser(firstFrame);
-		FigureDetector fd = new FigureDetector();
 		BackgroundSubtractor bg = new BackgroundSubtractor();
-		Skeletoniser sk = new Skeletoniser();
-		ModelFitter fitter = new ModelFitter();
 		
 		while(videoInput.hasNextFrame()) {
-			Mat frame = new Mat();
-			Core.flip(videoInput.getNextFrame().t(), frame, 1);
+			Mat frame = videoInput.getNextFrame();
 			
 			Mat drawing = bg.subtract(frame);
 			
