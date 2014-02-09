@@ -38,12 +38,7 @@ public class Squat {
 		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
 		Model model = new Model();
 		
-		// Get the first 600 frames quickly as it's all boring stuff
 		int frameNumber = 0;
-//		while(frameNumber < 600 && videoInput.hasNextFrame()) {
-//			videoInput.getNextFrame();
-//			frameNumber++;
-//		}
 		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
@@ -60,16 +55,7 @@ public class Squat {
 			Mat frame = new Mat();
 			Core.flip(videoInput.getNextFrame().t(), frame, 1);
 			
-			//Mat smoothedFrame = frame;//stabiliser.stabilise(frame);
-			
 			Mat drawing = bg.subtract(frame);
-			
-			//Pair<Mat, List<MatOfPoint>> detection = fd.detect(smoothedFrame);
-			
-			//Mat drawing = detection.l;
-			//drawing = sk.skeletonise(drawing);
-			
-			//model = fitter.fit(model, drawing, detection.r);
 			
 			videoDisplay.show(frame);
 			//videoDisplay.show(model);
@@ -79,7 +65,7 @@ public class Squat {
 			//videoDisplay2.show(model);
 			videoDisplay2.draw();
 			
-			System.out.println(frameNumber);
+			//System.out.println(frameNumber);
 			frameNumber++;
 		}
 		
