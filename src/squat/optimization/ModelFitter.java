@@ -16,10 +16,10 @@ import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 
-import squat.model.Model;
+import squat.model.SimpleStickmanModel;
 
 public class ModelFitter {
-	public Model fit(Model model, Mat frame, List<MatOfPoint> contours) {
+	public SimpleStickmanModel fit(SimpleStickmanModel model, Mat frame, List<MatOfPoint> contours) {
 		
 		ModelFitFunction fitFunction = new ModelFitFunction(model, frame, contours);
 		
@@ -40,6 +40,6 @@ public class ModelFitter {
 		
 		double[] results = p.getPoint();
 
-		return new Model(results);
+		return new SimpleStickmanModel(results);
 	}
 }

@@ -10,16 +10,16 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
-import squat.model.Model;
-import squat.model.Model.Joint;
+import squat.model.SimpleStickmanModel;
+import squat.model.SimpleStickmanModel.Joint;
 
 public class ModelFitFunction implements MultivariateFunction {
 
 	private Mat frame;
 	private List<MatOfPoint> contours;
-	private Model initialModel;
+	private SimpleStickmanModel initialModel;
 	
-	public ModelFitFunction(Model initialModel, Mat frame, List<MatOfPoint> contours) {
+	public ModelFitFunction(SimpleStickmanModel initialModel, Mat frame, List<MatOfPoint> contours) {
 		this.frame = frame;
 		this.contours = contours;
 		this.initialModel = initialModel;
@@ -28,7 +28,7 @@ public class ModelFitFunction implements MultivariateFunction {
 	@Override
 	public double value(double[] modelAsDouble) {
 		
-		Model model = new Model(modelAsDouble);
+		SimpleStickmanModel model = new SimpleStickmanModel(modelAsDouble);
 		
 		Joint[] allJoints = Joint.values();
 		double totalDistance = 0;
@@ -60,7 +60,7 @@ public class ModelFitFunction implements MultivariateFunction {
 		return totalDistance;
 	}
 	
-	private double distanceFromCentre(Model model) {
+	private double distanceFromCentre(SimpleStickmanModel model) {
 		Moments m = Imgproc.moments(frame);
 		Point centre = new Point((int)(m.get_m10()/m.get_m00()), (int)(m.get_m01()/m.get_m00()));
 		

@@ -12,7 +12,8 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.video.Video;
 
-import squat.model.Model;
+import squat.model.AngularModel;
+import squat.model.SimpleStickmanModel;
 import squat.optimization.ModelFitter;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
@@ -38,7 +39,7 @@ public class Squat {
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
-		Model model = new Model();
+		AngularModel model = new AngularModel(50, 50);
 		
 		int frameNumber = 0;
 		Mat firstFrame = new Mat();
@@ -54,7 +55,7 @@ public class Squat {
 			Mat drawing = bg.subtract(frame);
 			
 			videoDisplay.show(frame);
-			//videoDisplay.show(model);
+			videoDisplay.show(model);
 			videoDisplay.draw();
 			
 			videoDisplay2.show(drawing);
