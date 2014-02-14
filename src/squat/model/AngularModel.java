@@ -42,10 +42,23 @@ public class AngularModel implements Model {
 		for(int i = 0; i < NUM_JOINTS; i++) {
 			Point p2 = calculatePoint(p1, i);
 			g.drawLine(p1.x, p1.y, p2.x, p2.y);
+			//drawBodyPart(g, p1, p2);
 			p1 = p2;
 		}
 	}
 	
+	private void drawBodyPart(Graphics g, Point p1, Point p2) {
+		int[] x = new int[4];
+		int[] y = new int[4];
+		
+		x[0] = p1.x; y[0] = p1.y;
+		x[1] = p2.x; y[1] = p2.y;
+		x[2] = p1.x + 20; y[2] = p1.y + 20;
+		x[3] = p2.x + 20; y[3] = p2.y + 20;
+		
+		g.fillPolygon(x, y, 4);
+	}
+
 	private Point calculatePoint(Point from, int to) {
 		double d = distances[to];
 		double x = from.getX() + d * Math.cos(Math.toRadians(angles[to]));
