@@ -34,6 +34,10 @@ public class SimpleStickmanModel implements Model {
 	}
 	
 	public SimpleStickmanModel(double[] inJoints) {
+		set(inJoints);
+	}
+	
+	public void set(double[] inJoints) {
 		joints = new HashMap<Joint, Point>();
 		
 		Joint[] allJoints = Joint.values();
@@ -42,6 +46,10 @@ public class SimpleStickmanModel implements Model {
 		}
 		
 		connectJoints();
+	}
+	
+	public int getNumberOfValues() {
+		return Joint.values().length;
 	}
 	
 	public Map<Joint, Point> getJoints() {
@@ -97,7 +105,7 @@ public class SimpleStickmanModel implements Model {
 	/**
 	 * @return the model represented as an array of doubles
 	 */
-	public double[] toDoubles() {
+	public double[] get() {
 		Joint[] allJoints = Joint.values();
 		
 		double[] doubles = new double[allJoints.length*2];

@@ -39,7 +39,8 @@ public class Squat {
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
-		AngularModel model = new AngularModel(50, 50);
+		AngularModel model = new AngularModel();
+		ModelFitter fitter = new ModelFitter();
 		
 		int frameNumber = 0;
 		Mat firstFrame = new Mat();
@@ -52,13 +53,13 @@ public class Squat {
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
 			
-			Mat drawing = bg.subtract(frame);
+			Mat foreground = bg.subtract(frame);
 			
-			videoDisplay.show(frame);
+			fitter.fit(model, foreground);
 			videoDisplay.show(model);
 			videoDisplay.draw();
 			
-			videoDisplay2.show(drawing);
+			videoDisplay2.show(foreground);
 			//videoDisplay2.show(model);
 			videoDisplay2.draw();
 			

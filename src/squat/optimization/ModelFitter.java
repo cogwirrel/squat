@@ -16,30 +16,27 @@ import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizer;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 
+import squat.model.Model;
 import squat.model.SimpleStickmanModel;
 
 public class ModelFitter {
-	public SimpleStickmanModel fit(SimpleStickmanModel model, Mat frame, List<MatOfPoint> contours) {
+	public void fit(Model model, Mat frame) {
 		
-		ModelFitFunction fitFunction = new ModelFitFunction(model, frame, contours);
+		ModelFitFunction fitFunction = new ModelFitFunction(frame, model);
 		
-		double[] initialModel = model.toDoubles();
-		
-		NelderMeadSimplex nelderMead = new NelderMeadSimplex(initialModel.length);
-		
+		NelderMeadSimplex nelderMead = new NelderMeadSimplex(model.get().length);
 		
 		SimplexOptimizer optim = new SimplexOptimizer(5,5);
 		
 		PointValuePair p = optim.optimize(
 				nelderMead,
-				new InitialGuess(initialModel),
-				new MaxEval(10000),
-				new MaxIter(10000),
+				new InitialGuess(model.get()),
+				new MaxEval(1000000000),
+				new MaxIter(1000000000),
 				GoalType.MINIMIZE,
 				new ObjectiveFunction(fitFunction));
 		
 		double[] results = p.getPoint();
-
-		return new SimpleStickmanModel(results);
+		model.set(results);
 	}
 }

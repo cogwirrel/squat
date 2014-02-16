@@ -22,18 +22,18 @@ public class AngularModel implements Model {
 	
 	private static final int NUM_JOINTS = 5;
 	
-	private Point head;
+	private static final int DEGREES_OF_FREEDOM = NUM_JOINTS + 2;
+	
+	private Point head = new Point(70, 50);
 	
 	private double[] angles = new double[NUM_JOINTS];
 	private double[] lengths = new double[NUM_JOINTS];
 	private double[] widths = new double[NUM_JOINTS];
 	
-	public AngularModel(int headX, int headY) {
-		this.head = new Point(headX, headY);
+	public AngularModel() {
 		initialiseWidths();
 		initialiseLengths();
-		
-		testAnglesAndDistances();
+		initialiseAngles();
 	}
 	
 	private void initialiseWidths() {
@@ -52,17 +52,32 @@ public class AngularModel implements Model {
 		lengths[ANKLE_TOE] = 20;
 	}
 	
-	private void testAnglesAndDistances() {
+	private void initialiseAngles() {
 		angles[HEAD_SHOULDER] = 90;
-		lengths[HEAD_SHOULDER] = 20;
 		angles[SHOULDER_HIP] = 90;
-		lengths[SHOULDER_HIP] = 60;
 		angles[HIP_KNEE] = 120;
-		lengths[HIP_KNEE] = 40;
 		angles[KNEE_ANKLE] = 45;
-		lengths[KNEE_ANKLE] = 40;
 		angles[ANKLE_TOE] = 180;
-		lengths[ANKLE_TOE] = 20;
+	}
+	
+	public void set(double[] values) {
+		if(values.length == DEGREES_OF_FREEDOM) {
+			head.x = values[0];
+			head.y = values[1];
+			for(int i = 0; i < NUM_JOINTS; i++) {
+				angles[i] = values[2+i];
+			}
+		}
+	}
+	
+	public double[] get() {
+		double[] values = new double[DEGREES_OF_FREEDOM];
+		values[0] = head.x;
+		values[1] = head.y;
+		for(int i = 0; i < NUM_JOINTS; i++) {
+			values[2+i] = angles[i];
+		}
+		return values;
 	}
 
 	public void draw(Mat m) {
