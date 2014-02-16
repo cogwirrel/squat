@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
@@ -34,7 +35,7 @@ public class VideoDisplay {
 	}
 	
 	public void show(Mat m) throws Exception {
-		videoOutputPanel.setImage(toBufferedImage(m));
+		videoOutputPanel.setImage(VideoTools.toBufferedImage(m));
 	}
 	
 	public void show(Model m) {
@@ -47,21 +48,6 @@ public class VideoDisplay {
 	
 	public void close() {
 		frame.dispose();
-	}
-	
-	private BufferedImage toBufferedImage(Mat m) throws Exception {
-		int type = BufferedImage.TYPE_BYTE_GRAY;
-	    if ( m.channels() > 1 ) {
-	        Mat m2 = new Mat();
-	        Imgproc.cvtColor(m,m2,Imgproc.COLOR_BGR2RGB);
-	        type = BufferedImage.TYPE_3BYTE_BGR;
-	        m = m2;
-	    }
-	    byte [] b = new byte[m.channels()*m.cols()*m.rows()];
-	    m.get(0,0,b); // get all the pixels
-	    BufferedImage im = new BufferedImage(m.cols(),m.rows(), type);
-	    im.getRaster().setDataElements(0, 0, m.cols(),m.rows(), b);
-	    return im;
 	}
 	
 	private class VideoOutputPanel extends JPanel {
@@ -96,10 +82,10 @@ public class VideoDisplay {
 			}
 			
 			if(model != null) {
-				Color originalColor = g.getColor();
-				g.setColor(Color.GREEN);
-				model.draw(g);
-				g.setColor(originalColor);
+				Mat m = new Mat(this.getWidth(), this.getHeight(), 16);
+				model.draw(m);
+				Image im = VideoTools.toBufferedImage(m);
+				g.drawImage(im.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_FAST), 0, 0, null);
 			}
 		}
 	}

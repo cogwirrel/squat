@@ -1,7 +1,16 @@
 package squat.model;
 
 import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.Image;
+
+import org.opencv.core.Core;
+import org.opencv.core.Point;
+import org.opencv.core.Mat;
+import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+
+import squat.utils.PointUtils;
 
 public class AngularModel implements Model {
 	
@@ -16,53 +25,73 @@ public class AngularModel implements Model {
 	private Point head;
 	
 	private double[] angles = new double[NUM_JOINTS];
-	private double[] distances = new double[NUM_JOINTS];
+	private double[] lengths = new double[NUM_JOINTS];
+	private double[] widths = new double[NUM_JOINTS];
 	
 	public AngularModel(int headX, int headY) {
 		this.head = new Point(headX, headY);
+		initialiseWidths();
+		initialiseLengths();
 		
 		testAnglesAndDistances();
 	}
 	
-	private void testAnglesAndDistances() {
-		angles[HEAD_SHOULDER] = 90;
-		distances[HEAD_SHOULDER] = 20;
-		angles[SHOULDER_HIP] = 90;
-		distances[SHOULDER_HIP] = 60;
-		angles[HIP_KNEE] = 120;
-		distances[HIP_KNEE] = 40;
-		angles[KNEE_ANKLE] = 45;
-		distances[KNEE_ANKLE] = 40;
-		angles[ANKLE_TOE] = 180;
-		distances[ANKLE_TOE] = 20;
-	}
-
-	public void draw(Graphics g) {
-		Point p1 = head;
-		for(int i = 0; i < NUM_JOINTS; i++) {
-			Point p2 = calculatePoint(p1, i);
-			g.drawLine(p1.x, p1.y, p2.x, p2.y);
-			//drawBodyPart(g, p1, p2);
-			p1 = p2;
-		}
+	private void initialiseWidths() {
+		widths[HEAD_SHOULDER] = 30;
+		widths[SHOULDER_HIP] = 40;
+		widths[HIP_KNEE] = 30;
+		widths[KNEE_ANKLE] = 20;
+		widths[ANKLE_TOE] = 10;
 	}
 	
-	private void drawBodyPart(Graphics g, Point p1, Point p2) {
-		int[] x = new int[4];
-		int[] y = new int[4];
+	private void initialiseLengths() {
+		lengths[HEAD_SHOULDER] = 20;
+		lengths[SHOULDER_HIP] = 60;
+		lengths[HIP_KNEE] = 40;
+		lengths[KNEE_ANKLE] = 40;
+		lengths[ANKLE_TOE] = 20;
+	}
+	
+	private void testAnglesAndDistances() {
+		angles[HEAD_SHOULDER] = 90;
+		lengths[HEAD_SHOULDER] = 20;
+		angles[SHOULDER_HIP] = 90;
+		lengths[SHOULDER_HIP] = 60;
+		angles[HIP_KNEE] = 120;
+		lengths[HIP_KNEE] = 40;
+		angles[KNEE_ANKLE] = 45;
+		lengths[KNEE_ANKLE] = 40;
+		angles[ANKLE_TOE] = 180;
+		lengths[ANKLE_TOE] = 20;
+	}
+
+	public void draw(Mat m) {
+		m.setTo(new Scalar(0,0,0));
+		Point[] points = new Point[NUM_JOINTS + 1];
+		points[0] = head;
+		Point from = head;
+		for(int i = 0; i < NUM_JOINTS; i++) {
+			Point to = calculatePoint(from, i);
+			points[i+1] = to;
+			drawBodyPart(m, from, to, i);
+			from = to;
+		}
 		
-		x[0] = p1.x; y[0] = p1.y;
-		x[1] = p2.x; y[1] = p2.y;
-		x[2] = p1.x + 20; y[2] = p1.y + 20;
-		x[3] = p2.x + 20; y[3] = p2.y + 20;
-		
-		g.fillPolygon(x, y, 4);
+		// Draw the bar on the lifter's back
+		Core.circle(m, points[1], 30, new Scalar(255,255,255), -1);
+	}
+	
+	private void drawBodyPart(Mat m, Point from, Point to, int toIndex) {
+		Point centre = PointUtils.centre(from, to);
+		RotatedRect r = new RotatedRect(centre, new Size(widths[toIndex], 10 + PointUtils.distance(from, to)), 90 + angles[toIndex]);
+
+		Core.ellipse(m, r, new Scalar(255, 255, 255), -1);
 	}
 
 	private Point calculatePoint(Point from, int to) {
-		double d = distances[to];
-		double x = from.getX() + d * Math.cos(Math.toRadians(angles[to]));
-		double y = from.getY() + d * Math.sin(Math.toRadians(angles[to]));
+		double d = lengths[to];
+		double x = from.x + d * Math.cos(Math.toRadians(angles[to]));
+		double y = from.y + d * Math.sin(Math.toRadians(angles[to]));
 		return new Point((int)x, (int)y);
 	}
 }

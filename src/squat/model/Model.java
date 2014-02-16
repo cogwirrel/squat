@@ -1,7 +1,7 @@
 package squat.model;
 
-import java.awt.Graphics;
+import org.opencv.core.Mat;
 
 public interface Model {
-	public void draw(Graphics g);
+	public void draw(Mat m);
 }

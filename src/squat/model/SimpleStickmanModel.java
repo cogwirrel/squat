@@ -90,6 +90,10 @@ public class SimpleStickmanModel implements Model {
 		}
 	}
 	
+	public void draw(Mat m) {
+		
+	}
+	
 	/**
 	 * @return the model represented as an array of doubles
 	 */
