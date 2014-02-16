@@ -79,6 +79,30 @@ public class AngularModel implements Model {
 		}
 		return values;
 	}
+	
+	public double[] getUpperBounds() {
+		return new double[]{
+			240, // head x
+			360, // head y
+			360,
+			360,
+			360,
+			360,
+			360
+		};
+	}
+	
+	public double[] getLowerBounds() {
+		return new double[] {
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0
+		};
+	}
 
 	public void draw(Mat m) {
 		m.setTo(new Scalar(0,0,0));

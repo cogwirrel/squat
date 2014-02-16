@@ -119,6 +119,14 @@ public class SimpleStickmanModel implements Model {
 		return doubles;
 	}
 	
+	public double[] getLowerBounds() {
+		return new double[Joint.values().length * 2];
+	}
+	
+	public double[] getUpperBounds() {
+		return new double[Joint.values().length * 2];
+	}
+	
 	/**
 	 * @return the height of the model
 	 */

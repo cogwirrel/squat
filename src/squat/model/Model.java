@@ -6,4 +6,6 @@ public interface Model {
 	public void draw(Mat m);
 	public void set(double[] values);
 	public double[] get();
+	public double[] getUpperBounds();
+	public double[] getLowerBounds();
 }
