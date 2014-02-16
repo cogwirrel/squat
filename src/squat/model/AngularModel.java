@@ -80,6 +80,7 @@ public class AngularModel implements Model {
 		return values;
 	}
 	
+	// TODO: Sort out the actual bounds for knees - may need to do something clever with mod?
 	public double[] getUpperBounds() {
 		return new double[]{
 			240, // head x

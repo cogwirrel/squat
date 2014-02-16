@@ -42,12 +42,17 @@ public class Squat {
 		AngularModel model = new AngularModel();
 		ModelFitter fitter = new ModelFitter();
 		
-		int frameNumber = 0;
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
 			firstFrame = videoInput.getNextFrame();
 		}
 		
+		int frameNumber = 0;
+		while(frameNumber < 400 && videoInput.hasNextFrame()) {
+			videoInput.getNextFrame();
+			frameNumber++;
+		}
+
 		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 40);
 		
 		while(videoInput.hasNextFrame()) {
