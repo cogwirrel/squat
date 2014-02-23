@@ -5,6 +5,7 @@ import org.opencv.core.Mat;
 
 import squat.model.AngularModel;
 import squat.optimization.ModelFitter;
+import squat.optimization.ModelFitterOptim;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
 import squat.utils.VideoDisplay;
@@ -24,7 +25,7 @@ public class Squat {
 		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
 		AngularModel model = new AngularModel();
-		ModelFitter fitter = new ModelFitter();
+		ModelFitter fitter = new ModelFitterOptim();
 		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
