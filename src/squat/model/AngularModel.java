@@ -1,11 +1,8 @@
 package squat.model;
 
-import java.awt.Graphics;
-import java.awt.Image;
-
 import org.opencv.core.Core;
-import org.opencv.core.Point;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;

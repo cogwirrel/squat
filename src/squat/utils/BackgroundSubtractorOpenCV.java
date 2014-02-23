@@ -2,7 +2,6 @@ package squat.utils;
 
 import org.opencv.core.Mat;
 import org.opencv.video.BackgroundSubtractorMOG;
-import org.opencv.video.BackgroundSubtractorMOG2;
 
 public class BackgroundSubtractorOpenCV implements BackgroundSubtractor {
 	private BackgroundSubtractorMOG subtractor;
