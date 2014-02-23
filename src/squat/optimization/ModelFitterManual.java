@@ -16,30 +16,45 @@ import squat.utils.VideoDisplay;
 public class ModelFitterManual implements ModelFitter {
 
 	private VideoDisplay display;
-	private JFrame frame;
+	private JFrame jFrame;
+	private final int width;
+	private final int height;
 	
-	public ModelFitterManual(final int width, final int height) {
+	public ModelFitterManual(int width, int height) {
 		display = new VideoDisplay("Manual Fitting", width, height);
+		this.width = width;
+		this.height = height;
+	}
+	
+	@Override
+	public void fit(final Model model, Mat frame) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				frame = new JFrame("Manual Fitting Controls");
-				frame.setSize(width, height);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				jFrame = new JFrame("Manual Fitting Controls");
+				jFrame.setSize(width, height);
+				jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
-				JPanel panel = new JPanel();
-				panel.setLayout(new FlowLayout(FlowLayout.CENTER));
-				panel.add(new JSlider(0, 360));
+				JPanel panel = makePanel(model);
 				
-				frame.setContentPane(panel);
-				frame.pack();
-				frame.setVisible(true);
+				jFrame.setContentPane(panel);
+				jFrame.pack();
+				jFrame.setVisible(true);
 			}
 		});
 	}
 	
-	@Override
-	public void fit(Model model, Mat frame) {
+	private JPanel makePanel(Model model) {
+		JPanel panel = new JPanel();
 		
+		double[] values = model.get();
+		double[] lb = model.getLowerBounds();
+		double[] ub = model.getUpperBounds();
 		
-	}	
+		for(int i = 0; i < values.length; i++) {
+			JSlider slider = new JSlider((int)lb[i], (int)ub[i]);
+			panel.add(slider);
+		}
+		
+		return panel;
+	}
 }
