@@ -2,13 +2,20 @@ package squat.optimization;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 
 import squat.model.Model;
 import squat.utils.VideoDisplay;
@@ -19,6 +26,7 @@ public class ModelFitterManual implements ModelFitter {
 	private JFrame jFrame;
 	private final int width;
 	private final int height;
+	private boolean done = false;
 	
 	public ModelFitterManual(int width, int height) {
 		display = new VideoDisplay("Manual Fitting", width, height);
@@ -27,23 +35,35 @@ public class ModelFitterManual implements ModelFitter {
 	}
 	
 	@Override
-	public void fit(final Model model, Mat frame) {
+	public void fit(final Model model, final Mat frame) {
+		done = false;
+		
+		Mat blended = new Mat();
+		Mat m = new Mat(frame.size(), frame.type());
+		model.draw(m);
+		Core.addWeighted(frame, 0.5, m, 0.5, 0, blended);
+		display.show(blended);
+		
+		display.draw();
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				jFrame = new JFrame("Manual Fitting Controls");
-				jFrame.setSize(width, height);
 				jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
-				JPanel panel = makePanel(model);
+				JPanel panel = makePanel(model, frame);
 				
 				jFrame.setContentPane(panel);
+				jFrame.setPreferredSize(new Dimension(width, height));
 				jFrame.pack();
 				jFrame.setVisible(true);
 			}
 		});
+		
+		while(!done) {}
 	}
 	
-	private JPanel makePanel(Model model) {
+	private JPanel makePanel(final Model model, final Mat frame) {
 		JPanel panel = new JPanel();
 		
 		double[] values = model.get();
@@ -51,9 +71,43 @@ public class ModelFitterManual implements ModelFitter {
 		double[] ub = model.getUpperBounds();
 		
 		for(int i = 0; i < values.length; i++) {
-			JSlider slider = new JSlider((int)lb[i], (int)ub[i]);
+			final int index = i;
+			final JSlider slider = new JSlider((int)lb[i], (int)ub[i]);
+			slider.setMinorTickSpacing(5);
+		    slider.setMajorTickSpacing(25);
+			slider.setPaintTicks(true);
+		    slider.setSnapToTicks(true);
+		    slider.setValue((int)values[i]);
+		    slider.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					double[] vals = model.get();
+					vals[index] = slider.getValue();
+					model.set(vals);
+					Mat blended = new Mat();
+					Mat m = new Mat(frame.size(), frame.type());
+					model.draw(m);
+					Core.addWeighted(frame, 0.5, m, 0.5, 0, blended);
+					display.show(blended);
+					display.draw();
+				}
+		    	
+		    });
 			panel.add(slider);
 		}
+		
+		JButton button = new JButton("Done");
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				done = true;
+			}
+			
+		});
+		
+		panel.add(button);
 		
 		return panel;
 	}
