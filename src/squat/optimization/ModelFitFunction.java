@@ -29,8 +29,6 @@ public class ModelFitFunction implements MultivariateFunction {
 		
 		int overlap = frame.rows() * frame.cols() - Core.countNonZero(res);
 		
-		System.out.println(overlap);
-		
 		return overlap;
 	}
 
