@@ -42,7 +42,7 @@ public class Squat {
 			frameNumber++;
 		}
 
-		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 40);
+		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 30);
 		
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();

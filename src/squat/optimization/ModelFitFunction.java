@@ -24,12 +24,25 @@ public class ModelFitFunction implements MultivariateFunction {
 		Mat m = new Mat(frame.size(), frame.type());
 		model.draw(m);
 		
+		// We want the most overlap
+		int overlap = numberOverlappingPixels(frame, m);
+		
+		// We want to minimise non overlap
+		int nonOverlap = frame.rows() * frame.cols() - overlap;
+		
+		return nonOverlap;
+	}
+	
+	private int numberOverlappingPixels(Mat m1, Mat m2) {
 		Mat res = new Mat();
-		Core.bitwise_and(frame, m, res);
-		
-		int overlap = frame.rows() * frame.cols() - Core.countNonZero(res);
-		
-		return overlap;
+		Core.bitwise_and(m1, m2, res);
+		return Core.countNonZero(res);
 	}
 
+	private int numberOverspillingPixels(Mat m1, Mat m2) {
+		Mat inverted = new Mat();
+		Core.bitwise_not(m1, inverted);
+		return numberOverlappingPixels(inverted, m2);
+	}
+	
 }

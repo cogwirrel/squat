@@ -82,11 +82,11 @@ public class AngularModel implements Model {
 		return new double[]{
 			240, // head x
 			360, // head y
-			360,
-			360,
-			360,
-			360,
-			360
+			90,
+			135,
+			225,
+			135,
+			200
 		};
 	}
 	
@@ -94,11 +94,11 @@ public class AngularModel implements Model {
 		return new double[] {
 			0,
 			0,
+			80,
 			0,
-			0,
-			0,
-			0,
-			0
+			45,
+			45,
+			160
 		};
 	}
 
