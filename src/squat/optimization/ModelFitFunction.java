@@ -35,8 +35,14 @@ public class ModelFitFunction implements MultivariateFunction {
 	
 	private int numberOverlappingPixels(Mat m1, Mat m2) {
 		Mat res = new Mat();
-		Core.bitwise_and(m1, m2, res);
-		return Core.countNonZero(res);
+		int overlap = 0;
+		try {
+			Core.bitwise_and(m1, m2, res);
+			overlap = Core.countNonZero(res);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return overlap;
 	}
 
 	private int numberOverspillingPixels(Mat m1, Mat m2) {
