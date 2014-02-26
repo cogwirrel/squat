@@ -42,19 +42,19 @@ public class Squat {
 			frameNumber++;
 		}
 
-		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 25);
+		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 40);
 		
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
 			
 			Mat foreground = bg.subtract(frame);
 			
-//			fitter.fit(model, foreground);
-//			Mat m = new Mat(new Size(width, height), 16);
-//			model.draw(m);
+			fitter.fit(model, foreground);
+			Mat m = new Mat(frame.size(), frame.type());
+			model.draw(m);
 			
-			//videoDisplay.show(VideoTools.blend(frame, m));
-			//videoDisplay.draw();
+			videoDisplay.show(VideoTools.blend(frame, m));
+			videoDisplay.draw();
 			
 			videoDisplay2.show(foreground);
 			videoDisplay2.draw();
