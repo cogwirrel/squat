@@ -12,6 +12,7 @@ import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoInput;
+import squat.utils.VideoTools;
 
 public class Squat {
 
@@ -51,7 +52,8 @@ public class Squat {
 			fitter.fit(model, foreground);
 			Mat m = new Mat(new Size(width, height), 16);
 			model.draw(m);
-			videoDisplay.show(m);
+			
+			videoDisplay.show(VideoTools.blend(frame, m));
 			videoDisplay.draw();
 			
 			videoDisplay2.show(foreground);

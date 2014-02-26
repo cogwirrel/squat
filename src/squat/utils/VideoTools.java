@@ -2,6 +2,7 @@ package squat.utils;
 
 import java.awt.image.BufferedImage;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -45,5 +46,11 @@ public class VideoTools {
 	    BufferedImage im = new BufferedImage(m.cols(),m.rows(), type);
 	    im.getRaster().setDataElements(0, 0, m.cols(),m.rows(), b);
 	    return im;
+	}
+	
+	public static Mat blend(Mat m1, Mat m2) {
+		Mat blended = new Mat();
+		Core.addWeighted(m1, 0.5, m2, 0.5, 0, blended);
+		return blended;
 	}
 }

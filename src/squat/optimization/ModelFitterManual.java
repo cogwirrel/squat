@@ -19,6 +19,7 @@ import org.opencv.core.Size;
 
 import squat.model.Model;
 import squat.utils.VideoDisplay;
+import squat.utils.VideoTools;
 
 public class ModelFitterManual implements ModelFitter {
 
@@ -41,9 +42,8 @@ public class ModelFitterManual implements ModelFitter {
 		Mat blended = new Mat();
 		Mat m = new Mat(frame.size(), frame.type());
 		model.draw(m);
-		Core.addWeighted(frame, 0.5, m, 0.5, 0, blended);
-		display.show(blended);
 		
+		display.show(VideoTools.blend(frame, m));
 		display.draw();
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -85,11 +85,10 @@ public class ModelFitterManual implements ModelFitter {
 					double[] vals = model.get();
 					vals[index] = slider.getValue();
 					model.set(vals);
-					Mat blended = new Mat();
 					Mat m = new Mat(frame.size(), frame.type());
 					model.draw(m);
-					Core.addWeighted(frame, 0.5, m, 0.5, 0, blended);
-					display.show(blended);
+					
+					display.show(VideoTools.blend(frame, m));
 					display.draw();
 				}
 		    	
