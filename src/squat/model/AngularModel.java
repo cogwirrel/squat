@@ -90,7 +90,7 @@ public class AngularModel implements Model {
 			0,
 			45,
 			45,
-			175
+			170
 		};
 	}
 
