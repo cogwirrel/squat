@@ -88,6 +88,8 @@ public class ModelFitterManual implements ModelFitter {
 					Mat m = new Mat(frame.size(), frame.type());
 					model.draw(m);
 					
+					System.out.println(slider.getValue());
+
 					display.show(VideoTools.blend(frame, m));
 					display.draw();
 				}
