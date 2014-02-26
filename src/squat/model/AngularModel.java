@@ -19,9 +19,9 @@ public class AngularModel implements Model {
 	
 	private static final int NUM_JOINTS = 5;
 	
-	private static final int DEGREES_OF_FREEDOM = NUM_JOINTS + 2;
+	private static final int DEGREES_OF_FREEDOM = NUM_JOINTS;
 	
-	private Point head = new Point(70, 50);
+	private Point foot = new Point(105, 280);
 	
 	private double[] angles = new double[NUM_JOINTS];
 	private double[] lengths = new double[NUM_JOINTS];
@@ -59,20 +59,16 @@ public class AngularModel implements Model {
 	
 	public void set(double[] values) {
 		if(values.length == DEGREES_OF_FREEDOM) {
-			head.x = values[0];
-			head.y = values[1];
 			for(int i = 0; i < NUM_JOINTS; i++) {
-				angles[i] = values[2+i];
+				angles[i] = values[i];
 			}
 		}
 	}
 	
 	public double[] get() {
 		double[] values = new double[DEGREES_OF_FREEDOM];
-		values[0] = head.x;
-		values[1] = head.y;
 		for(int i = 0; i < NUM_JOINTS; i++) {
-			values[2+i] = angles[i];
+			values[i] = angles[i];
 		}
 		return values;
 	}
@@ -80,36 +76,32 @@ public class AngularModel implements Model {
 	// TODO: Sort out the actual bounds for knees - may need to do something clever with mod?
 	public double[] getUpperBounds() {
 		return new double[]{
-			240, // head x
-			360, // head y
 			90,
 			135,
 			225,
 			135,
-			200
+			185
 		};
 	}
 	
 	public double[] getLowerBounds() {
 		return new double[] {
-			0,
-			0,
 			80,
 			0,
 			45,
 			45,
-			160
+			175
 		};
 	}
 
 	public void draw(Mat m) {
 		m.setTo(new Scalar(0,0,0));
 		Point[] points = new Point[NUM_JOINTS + 1];
-		points[0] = head;
-		Point from = head;
-		for(int i = 0; i < NUM_JOINTS; i++) {
+		points[NUM_JOINTS] = foot;
+		Point from = foot;
+		for(int i = NUM_JOINTS - 1; i >= 0; i--) {
 			Point to = calculatePoint(from, i);
-			points[i+1] = to;
+			points[i] = to;
 			drawBodyPart(m, from, to, i);
 			from = to;
 		}
@@ -127,8 +119,8 @@ public class AngularModel implements Model {
 
 	private Point calculatePoint(Point from, int to) {
 		double d = lengths[to];
-		double x = from.x + d * Math.cos(Math.toRadians(angles[to]));
-		double y = from.y + d * Math.sin(Math.toRadians(angles[to]));
+		double x = from.x + d * Math.cos(Math.toRadians(180 + angles[to]));
+		double y = from.y + d * Math.sin(Math.toRadians(180 + angles[to]));
 		return new Point((int)x, (int)y);
 	}
 }
