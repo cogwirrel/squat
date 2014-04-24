@@ -57,7 +57,7 @@ public class Squat {
 		
 		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
 			public void onEvent(Model m) {
-				modelColour.set(new double[]{0,0,255});
+				modelColour.set(new double[]{0,255,255});
 				System.out.println("Start Lockout!!!");
 			}
 		});
@@ -66,6 +66,48 @@ public class Squat {
 			public void onEvent(Model m) {
 				modelColour.set(new double[]{255,255,255});
 				System.out.println("End Lockout!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_BAD_WEIGHT_DISTRIBUTION_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0,0,255});
+				System.out.println("Start Bad Weight Distro!!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_BAD_WEIGHT_DISTRIBUTION_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255,255,255});
+				System.out.println("End Bad Weight Distro!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_FORWARD_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0,0,255});
+				System.out.println("Start Knees Forward!!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_FORWARD_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255,255,255});
+				System.out.println("End Knees Forward!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_BACKWARD_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0,0,255});
+				System.out.println("Start Knees Backward!!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_BACKWARD_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255,255,255});
+				System.out.println("End Knees Backward!!");
 			}
 		});
 		
@@ -108,7 +150,7 @@ public class Squat {
 			videoDisplay2.show(foreground);
 			videoDisplay2.draw();
 			
-			System.out.println(frameNumber);
+			//System.out.println(frameNumber);
 			frameNumber++;
 		}
 		
