@@ -182,6 +182,6 @@ public class AngularModel implements Model {
 		double footX = points[ANKLE_TOE].x;
 		double difference = Math.abs(weightX - footX);
 		// TODO put in appropriate difference between heel joint and shoulder
-		return difference < 30;
+		return difference < 40;
 	}
 }
