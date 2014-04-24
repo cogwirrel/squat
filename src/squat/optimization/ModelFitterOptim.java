@@ -21,16 +21,21 @@ public class ModelFitterOptim implements ModelFitter {
 		
 		MultivariateOptimizer optim = new BOBYQAOptimizer(2*model.get().length);
 		
-		PointValuePair p = optim.optimize(
-			new InitialGuess(model.get()),
-			new MaxEval(5000),
-			GoalType.MINIMIZE,
-			new ObjectiveFunction(fitFunction),
-			new SimpleBounds(model.getLowerBounds(), model.getUpperBounds())
-		);
+		try {
+			PointValuePair p = optim.optimize(
+					new InitialGuess(model.get()),
+					new MaxEval(5000),
+					GoalType.MINIMIZE,
+					new ObjectiveFunction(fitFunction),
+					new SimpleBounds(model.getLowerBounds(), model.getUpperBounds())
+				);
+				
+				double[] results = p.getPoint();
+				model.set(results);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
-		double[] results = p.getPoint();
-		model.set(results);
 	}
 	
 	private void nelderMeadFit(Model model, Mat frame) {
