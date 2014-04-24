@@ -55,6 +55,26 @@ public class Squat {
 			}
 		});
 		
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0,0,255});
+				System.out.println("Start Lockout!!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255,255,255});
+				System.out.println("End Lockout!!");
+			}
+		});
+		
+//		modelEventManager.addListener(ModelEventType.TICK, new ModelEventListener() {
+//			public void onEvent(Model m) {
+//				
+//			}
+//		});
+		
 		SquatRepCounter sqrc = new SquatRepCounter();
 		modelEventManager.addListener(sqrc.getEventType(), sqrc);
 		

@@ -101,21 +101,34 @@ public class AngularModel implements Model {
 		draw(m, new Scalar(255,255,255));
 	}
 	
-	@Override
-	public void draw(Mat m, Scalar colour) {
-		m.setTo(new Scalar(0,0,0));
+	private Point[] calculatePoints() {
 		Point[] points = new Point[NUM_JOINTS + 1];
 		points[NUM_JOINTS] = foot;
 		Point from = foot;
 		for(int i = NUM_JOINTS - 1; i >= 0; i--) {
 			Point to = calculatePoint(from, i);
 			points[i] = to;
-			drawBodyPart(m, from, to, i, colour);
 			from = to;
+		}
+		return points;
+	}
+	
+	@Override
+	public void draw(Mat m, Scalar colour) {
+		m.setTo(new Scalar(0,0,0));
+		
+		// TODO optimise this by inlining
+		Point[] points = calculatePoints();
+		
+		for(int i = NUM_JOINTS - 1; i >= 0; i--) {
+			drawBodyPart(m, points[i+1], points[i], i, colour);
 		}
 		
 		// Draw the bar on the lifter's back
-		Core.circle(m, points[1], 30, colour, -1);
+		Core.circle(m, points[SHOULDER_HIP], 30, colour, -1);
+		
+		// Draw a small circle for the butt!
+		Core.circle(m, points[HIP_KNEE], 15, colour, -1);
 	}
 	
 	private void drawBodyPart(Mat m, Point from, Point to, int toIndex, Scalar colour) {
@@ -138,8 +151,37 @@ public class AngularModel implements Model {
 	}
 
 	@Override
-	public boolean isSquatUpright() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isSquatLockedOut() {
+		return angles[KNEE_ANKLE] > 75 &&
+			   angles[KNEE_ANKLE] < 95 &&
+			   angles[HIP_KNEE] > 85 &&
+			   angles[HIP_KNEE] < 110 &&
+			   angles[SHOULDER_HIP] > 75 &&
+			   angles[SHOULDER_HIP] < 100;
+	}
+
+	@Override
+	public boolean isSquatKneeForward() {
+		return angles[KNEE_ANKLE] < 70;
+	}
+
+	@Override
+	public boolean isSquatKneeBackward() {
+		return angles[KNEE_ANKLE] > 110;
+	}
+
+	@Override
+	public boolean isSquatHeelGrounded() {
+		return angles[ANKLE_TOE] < 190 && angles[ANKLE_TOE] > 170;
+	}
+
+	@Override
+	public boolean isSquatWeightOverFeet() {
+		Point[] points = calculatePoints();
+		double weightX = points[SHOULDER_HIP].x;
+		double footX = points[ANKLE_TOE].x;
+		double difference = Math.abs(weightX - footX);
+		// TODO put in appropriate difference between heel joint and shoulder
+		return difference < 30;
 	}
 }

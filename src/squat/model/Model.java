@@ -12,5 +12,9 @@ public interface Model {
 	public double[] getLowerBounds();
 	
 	public boolean isSquatBelowParallel();
-	public boolean isSquatUpright();
+	public boolean isSquatLockedOut();
+	public boolean isSquatKneeForward();
+	public boolean isSquatKneeBackward();
+	public boolean isSquatHeelGrounded();
+	public boolean isSquatWeightOverFeet();
 }
