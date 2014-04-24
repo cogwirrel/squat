@@ -5,6 +5,10 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
 import squat.model.AngularModel;
+import squat.model.Model;
+import squat.model.event.ModelEventListener;
+import squat.model.event.ModelEventManager;
+import squat.model.event.ModelEventType;
 import squat.optimization.ModelFitter;
 import squat.optimization.ModelFitterManual;
 import squat.optimization.ModelFitterOptim;
@@ -31,6 +35,14 @@ public class Squat {
 		ModelFitter fitter = new ModelFitterOptim();
 		//ModelFitter fitter = new ModelFitterManual(width, height);
 		
+		ModelEventManager modelEventManager = new ModelEventManager();
+		
+		modelEventManager.addListener(ModelEventType.TICK, new ModelEventListener() {
+			public void onEvent(Model m) {
+				System.out.println("Tick!!");
+			}
+		});
+		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
 			firstFrame = videoInput.getNextFrame();
@@ -52,6 +64,8 @@ public class Squat {
 			fitter.fit(model, foreground);
 			Mat m = new Mat(frame.size(), frame.type());
 			model.draw(m);
+			
+			modelEventManager.update(model);
 			
 			videoDisplay.show(VideoTools.blend(frame, m));
 			videoDisplay.draw();
