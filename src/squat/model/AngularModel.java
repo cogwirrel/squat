@@ -21,13 +21,15 @@ public class AngularModel implements Model {
 	
 	private static final int DEGREES_OF_FREEDOM = NUM_JOINTS;
 	
-	private Point foot = new Point(105, 280);
+	// The position of the toe is fixed.
+	private Point foot;// = new Point(105, 280);
 	
 	private double[] angles = new double[NUM_JOINTS];
 	private double[] lengths = new double[NUM_JOINTS];
 	private double[] widths = new double[NUM_JOINTS];
 	
-	public AngularModel() {
+	public AngularModel(double footX, double footY) {
+		this.foot = new Point(footX, footY);
 		initialiseWidths();
 		initialiseLengths();
 		initialiseAngles();

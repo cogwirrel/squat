@@ -27,7 +27,7 @@ public class Squat {
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
-		AngularModel model = new AngularModel();
+		AngularModel model = new AngularModel(105, 280);
 		ModelFitter fitter = new ModelFitterOptim();
 		//ModelFitter fitter = new ModelFitterManual(width, height);
 		
