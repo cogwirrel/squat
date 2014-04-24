@@ -162,7 +162,7 @@ public class AngularModel implements Model {
 
 	@Override
 	public boolean isSquatKneeForward() {
-		return angles[KNEE_ANKLE] < 70;
+		return angles[KNEE_ANKLE] < 60;
 	}
 
 	@Override
