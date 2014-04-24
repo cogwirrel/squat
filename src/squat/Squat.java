@@ -10,6 +10,7 @@ import squat.model.Model;
 import squat.model.event.ModelEventListener;
 import squat.model.event.ModelEventManager;
 import squat.model.event.ModelEventType;
+import squat.model.event.SquatRepCounter;
 import squat.optimization.ModelFitter;
 import squat.optimization.ModelFitterManual;
 import squat.optimization.ModelFitterOptim;
@@ -54,6 +55,9 @@ public class Squat {
 			}
 		});
 		
+		SquatRepCounter sqrc = new SquatRepCounter();
+		modelEventManager.addListener(sqrc.getEventType(), sqrc);
+		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
 			firstFrame = videoInput.getNextFrame();
@@ -92,6 +96,7 @@ public class Squat {
 		videoDisplay2.close();
 		
 		System.out.println("done");
+		System.out.println("Reps: " + sqrc.getReps());
 
 	}
 
