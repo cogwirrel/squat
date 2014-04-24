@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 
 import squat.utils.Pair;
 
@@ -98,6 +99,11 @@ public class SimpleStickmanModel implements Model {
 		}
 	}
 	
+	@Override
+	public void draw(Mat m, Scalar colour) {
+		
+	}
+	
 	public void draw(Mat m) {
 		
 	}
@@ -152,5 +158,17 @@ public class SimpleStickmanModel implements Model {
 			difference += Math.abs(theirDist - ourDist);
 		}
 		return difference;
+	}
+
+	@Override
+	public boolean isSquatBelowParallel() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isSquatUpright() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

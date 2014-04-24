@@ -97,6 +97,12 @@ public class AngularModel implements Model {
 	}
 
 	public void draw(Mat m) {
+		// Draw white by default (use this for optimisation that deals with black+white)
+		draw(m, new Scalar(255,255,255));
+	}
+	
+	@Override
+	public void draw(Mat m, Scalar colour) {
 		m.setTo(new Scalar(0,0,0));
 		Point[] points = new Point[NUM_JOINTS + 1];
 		points[NUM_JOINTS] = foot;
@@ -104,19 +110,19 @@ public class AngularModel implements Model {
 		for(int i = NUM_JOINTS - 1; i >= 0; i--) {
 			Point to = calculatePoint(from, i);
 			points[i] = to;
-			drawBodyPart(m, from, to, i);
+			drawBodyPart(m, from, to, i, colour);
 			from = to;
 		}
 		
 		// Draw the bar on the lifter's back
-		Core.circle(m, points[1], 30, new Scalar(255,255,255), -1);
+		Core.circle(m, points[1], 30, colour, -1);
 	}
 	
-	private void drawBodyPart(Mat m, Point from, Point to, int toIndex) {
+	private void drawBodyPart(Mat m, Point from, Point to, int toIndex, Scalar colour) {
 		Point centre = PointUtils.centre(from, to);
 		RotatedRect r = new RotatedRect(centre, new Size(widths[toIndex], 10 + PointUtils.distance(from, to)), 90 + angles[toIndex]);
 
-		Core.ellipse(m, r, new Scalar(255, 255, 255), -1);
+		Core.ellipse(m, r, colour, -1);
 	}
 
 	private Point calculatePoint(Point from, int to) {
@@ -124,5 +130,16 @@ public class AngularModel implements Model {
 		double x = from.x + d * Math.cos(Math.toRadians(180 + angles[to]));
 		double y = from.y + d * Math.sin(Math.toRadians(180 + angles[to]));
 		return new Point((int)x, (int)y);
+	}
+
+	@Override
+	public boolean isSquatBelowParallel() {
+		return angles[HIP_KNEE] > 180;
+	}
+
+	@Override
+	public boolean isSquatUpright() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

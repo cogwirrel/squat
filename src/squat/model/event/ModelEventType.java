@@ -2,7 +2,6 @@ package squat.model.event;
 
 public enum ModelEventType {
 	TICK,
-	SQUAT_START,
-	SQUAT_MIDDLE,
-	SQUAT_END,
+	SQUAT_BELOW_PARALLEL_START,
+	SQUAT_BELOW_PARALLEL_END,
 }

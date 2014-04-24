@@ -2,6 +2,7 @@ package squat;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 
 import squat.model.AngularModel;
@@ -35,11 +36,21 @@ public class Squat {
 		ModelFitter fitter = new ModelFitterOptim();
 		//ModelFitter fitter = new ModelFitterManual(width, height);
 		
+		final Scalar modelColour = new Scalar(255,255,255);
+		
 		ModelEventManager modelEventManager = new ModelEventManager();
 		
-		modelEventManager.addListener(ModelEventType.TICK, new ModelEventListener() {
+		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_START, new ModelEventListener() {
 			public void onEvent(Model m) {
-				System.out.println("Tick!!");
+				modelColour.set(new double[]{0,255,0});
+				System.out.println("Start Below Parallel!!!");
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255,255,255});
+				System.out.println("End Below Parallel!!");
 			}
 		});
 		
@@ -63,7 +74,7 @@ public class Squat {
 			
 			fitter.fit(model, foreground);
 			Mat m = new Mat(frame.size(), frame.type());
-			model.draw(m);
+			model.draw(m, modelColour);
 			
 			modelEventManager.update(model);
 			
@@ -73,7 +84,7 @@ public class Squat {
 			videoDisplay2.show(foreground);
 			videoDisplay2.draw();
 			
-			//System.out.println(frameNumber);
+			System.out.println(frameNumber);
 			frameNumber++;
 		}
 		
