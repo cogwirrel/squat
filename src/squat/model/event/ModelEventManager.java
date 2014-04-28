@@ -82,7 +82,7 @@ public class ModelEventManager {
 	
 	private boolean squatBadForm(Model model) {
 		return model.isSquatKneeForward() || model.isSquatKneeBackward() ||
-				!model.isSquatWeightOverFeet() || !model.isSquatHeelGrounded();
+				!model.isSquatWeightOverFeet();
 	}
 	
 	private void callListeners(ModelEventType type, Model model) {
