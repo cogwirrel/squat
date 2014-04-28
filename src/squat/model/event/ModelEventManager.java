@@ -9,8 +9,8 @@ public class ModelEventManager {
 	MultiMap<ModelEventType, ModelEventListener> listeners =
 			new MultiMap<ModelEventType, ModelEventListener>();
 	
-	private boolean previouslyBelowParallel = false;
 	private Model model;
+	private SquatPhaseTracker tracker;
 	
 	private ModelEventManagerStateSwitch squatBelowParallel =
 			new ModelEventManagerStateSwitch(
@@ -42,6 +42,20 @@ public class ModelEventManager {
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_START,
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_END);
 	
+	private ModelEventManagerStateSwitch squatDescending =
+			new ModelEventManagerStateSwitch(
+					ModelEventType.SQUAT_DESCEND_START,
+					ModelEventType.SQUAT_DESCEND_END);
+	
+	private ModelEventManagerStateSwitch squatAscending =
+			new ModelEventManagerStateSwitch(
+					ModelEventType.SQUAT_ASCEND_START,
+					ModelEventType.SQUAT_ASCEND_END);
+	
+	public ModelEventManager() {
+		tracker = new SquatPhaseTracker(5);
+	}
+	
 	public void update(Model model) {
 		this.model = model;
 		
@@ -61,6 +75,10 @@ public class ModelEventManager {
 		
 		squatBadWeightDistribution.update(!model.isSquatWeightOverFeet());
 		squatOnHeelOrToe.update(!model.isSquatHeelGrounded());
+		
+		tracker.add(model.getVerticalHipPosition());
+		squatDescending.update(tracker.isDescending(model));
+		squatAscending.update(tracker.isAscending(model));
 	}
 	
 	public void addListener(ModelEventType type, ModelEventListener listener) {

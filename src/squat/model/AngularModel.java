@@ -104,7 +104,6 @@ public class AngularModel implements Model {
 	}
 	
 	private Point[] calculatePoints() {
-		System.out.println("Calc points!");
 		if(cachedPoints == null) {
 			Point[] points = new Point[NUM_JOINTS + 1];
 			points[NUM_JOINTS] = foot;
@@ -134,7 +133,7 @@ public class AngularModel implements Model {
 		Core.circle(m, points[SHOULDER_HIP], 30, colour, -1);
 		
 		// Draw a small circle for the butt!
-		Core.circle(m, points[HIP_KNEE], 15, colour, -1);
+		Core.circle(m, points[HIP_KNEE], 5, colour, -1);
 		
 		// We have drawn the model, so clear the points cache
 		cachedPoints = null;
