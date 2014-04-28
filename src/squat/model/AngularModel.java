@@ -28,6 +28,8 @@ public class AngularModel implements Model {
 	private double[] lengths = new double[NUM_JOINTS];
 	private double[] widths = new double[NUM_JOINTS];
 	
+	private Point[] cachedPoints = null;
+	
 	public AngularModel(double footX, double footY) {
 		this.foot = new Point(footX, footY);
 		initialiseWidths();
@@ -102,15 +104,19 @@ public class AngularModel implements Model {
 	}
 	
 	private Point[] calculatePoints() {
-		Point[] points = new Point[NUM_JOINTS + 1];
-		points[NUM_JOINTS] = foot;
-		Point from = foot;
-		for(int i = NUM_JOINTS - 1; i >= 0; i--) {
-			Point to = calculatePoint(from, i);
-			points[i] = to;
-			from = to;
+		System.out.println("Calc points!");
+		if(cachedPoints == null) {
+			Point[] points = new Point[NUM_JOINTS + 1];
+			points[NUM_JOINTS] = foot;
+			Point from = foot;
+			for(int i = NUM_JOINTS - 1; i >= 0; i--) {
+				Point to = calculatePoint(from, i);
+				points[i] = to;
+				from = to;
+			}
+			cachedPoints = points;
 		}
-		return points;
+		return cachedPoints;
 	}
 	
 	@Override
@@ -129,6 +135,9 @@ public class AngularModel implements Model {
 		
 		// Draw a small circle for the butt!
 		Core.circle(m, points[HIP_KNEE], 15, colour, -1);
+		
+		// We have drawn the model, so clear the points cache
+		cachedPoints = null;
 	}
 	
 	private void drawBodyPart(Mat m, Point from, Point to, int toIndex, Scalar colour) {
