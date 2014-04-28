@@ -11,6 +11,8 @@ public interface Model {
 	public double[] getUpperBounds();
 	public double[] getLowerBounds();
 	
+	public double getVerticalHipPosition();
+	
 	public boolean isSquatBelowParallel();
 	public boolean isSquatLockedOut();
 	public boolean isSquatKneeForward();

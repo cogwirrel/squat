@@ -184,4 +184,10 @@ public class AngularModel implements Model {
 		// TODO put in appropriate difference between heel joint and shoulder
 		return difference < 40;
 	}
+	
+	@Override
+	public double getVerticalHipPosition() {
+		Point[] points = calculatePoints();
+		return points[HIP_KNEE].y;
+	}
 }
