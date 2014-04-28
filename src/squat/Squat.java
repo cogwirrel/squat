@@ -42,36 +42,9 @@ public class Squat {
 		
 		ModelEventManager modelEventManager = new ModelEventManager();
 		
-		modelEventManager.addListener(ModelEventType.SQUAT_ASCEND_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				System.out.println("Start ascention");
-				modelColour.set(new double[]{255,0,0});
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				System.out.println("Start descention");
-				modelColour.set(new double[]{0,0,255});
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_ASCEND_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				System.out.println("End ascention");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				System.out.println("End descention");
-			}
-		});
-		
 		SquatScorer squatScorer = new SquatScorer(modelEventManager);
 		
-		SquatRepCounter sqrc = new SquatRepCounter();
-		modelEventManager.addListener(sqrc.getEventType(), sqrc);
+		SquatRepCounter sqrc = new SquatRepCounter(modelEventManager);
 		
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {

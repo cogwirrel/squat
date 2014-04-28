@@ -42,18 +42,11 @@ public class ModelEventManager {
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_START,
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_END);
 	
-	private ModelEventManagerStateSwitch squatDescending =
-			new ModelEventManagerStateSwitch(
-					ModelEventType.SQUAT_DESCEND_START,
-					ModelEventType.SQUAT_DESCEND_END);
-	
-	private ModelEventManagerStateSwitch squatAscending =
-			new ModelEventManagerStateSwitch(
-					ModelEventType.SQUAT_ASCEND_START,
-					ModelEventType.SQUAT_ASCEND_END);
+	private ModelEventManagerPhaseSwitch squatPhase;
 	
 	public ModelEventManager() {
 		tracker = new SquatPhaseTracker(5);
+		squatPhase = new ModelEventManagerPhaseSwitch(tracker);
 	}
 	
 	public void update(Model model) {
@@ -76,9 +69,7 @@ public class ModelEventManager {
 		squatBadWeightDistribution.update(!model.isSquatWeightOverFeet());
 		squatOnHeelOrToe.update(!model.isSquatHeelGrounded());
 		
-		tracker.add(model.getVerticalHipPosition());
-		squatDescending.update(tracker.isDescending(model));
-		squatAscending.update(tracker.isAscending(model));
+		squatPhase.update(model);
 	}
 	
 	public void addListener(ModelEventType type, ModelEventListener listener) {
@@ -123,6 +114,27 @@ public class ModelEventManager {
 			}
 			// Set our previous state
 			previousState = newState;
+		}
+	}
+	
+	private class ModelEventManagerPhaseSwitch {
+		private boolean descending;
+		private SquatPhaseTracker tracker;
+		
+		public ModelEventManagerPhaseSwitch(SquatPhaseTracker tracker) {
+			this.tracker = tracker;
+			this.descending = false;
+		}
+		
+		public void update(Model model) {
+			tracker.add(model.getVerticalHipPosition());
+			if(tracker.isDescending() && !descending) {
+				callListeners(ModelEventType.SQUAT_DESCEND_START, model);
+				descending = true;
+			} else if(tracker.isAscending() && descending) {
+				callListeners(ModelEventType.SQUAT_ASCEND_START, model);
+				descending = false;
+			}
 		}
 	}
 }

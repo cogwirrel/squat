@@ -2,24 +2,29 @@ package squat.model.event;
 
 import squat.model.Model;
 
-public class SquatRepCounter implements ModelEventListener {
+public class SquatRepCounter {
 
-	private int reps;
+	private int halfReps;
 	
-	public SquatRepCounter() {
-		reps = 0;
-	}
-	
-	@Override
-	public void onEvent(Model m) {
-		reps++;
-	}
-	
-	public ModelEventType getEventType() {
-		return ModelEventType.SQUAT_BELOW_PARALLEL_END;
+	public SquatRepCounter(ModelEventManager modelEventManager) {
+		halfReps = 0;
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_ASCEND_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				System.out.println("Start ascention");
+				halfReps++;
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				System.out.println("Start descention");
+				halfReps++;
+			}
+		});
 	}
 
 	public int getReps() {
-		return reps;
+		return halfReps / 2;
 	}
 }

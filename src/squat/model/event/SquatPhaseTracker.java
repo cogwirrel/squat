@@ -12,7 +12,7 @@ public class SquatPhaseTracker {
 	
 	public SquatPhaseTracker(int numLocations) {
 		this.numLocations = numLocations;
-		this.thresh = numLocations / 2;
+		this.thresh = numLocations;
 	}
 	
 	public void add(double location) {
@@ -23,11 +23,11 @@ public class SquatPhaseTracker {
 		}
 	}
 	
-	public boolean isDescending(Model model) {
+	public boolean isDescending() {
 		return !allSimilar() && descendingOrder();
 	}
 	
-	public boolean isAscending(Model model) {
+	public boolean isAscending() {
 		return !allSimilar() && ascendingOrder();
 	}
 	
