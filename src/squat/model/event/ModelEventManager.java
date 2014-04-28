@@ -76,9 +76,13 @@ public class ModelEventManager {
 		listeners.put(type, listener);
 	}
 	
+	public void removeListener(ModelEventType type, ModelEventListener listener) {
+		listeners.remove(type, listener);
+	}
+	
 	private boolean squatBadForm(Model model) {
 		return model.isSquatKneeForward() || model.isSquatKneeBackward() ||
-				model.isSquatWeightOverFeet() || model.isSquatHeelGrounded();
+				!model.isSquatWeightOverFeet() || !model.isSquatHeelGrounded();
 	}
 	
 	private void callListeners(ModelEventType type, Model model) {
@@ -137,4 +141,6 @@ public class ModelEventManager {
 			}
 		}
 	}
+
+	
 }

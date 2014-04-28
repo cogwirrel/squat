@@ -38,7 +38,7 @@ public class SquatPhaseTracker {
 	private boolean descendingOrder() {
 		double curr = hipLocations.get(0);
 		for(int i = 1; i < hipLocations.size(); i++) {
-			if(hipLocations.get(i) > curr) {
+			if(hipLocations.get(i) < curr) {
 				return false;
 			}
 			curr = hipLocations.get(i);
@@ -49,7 +49,7 @@ public class SquatPhaseTracker {
 	private boolean ascendingOrder() {
 		double curr = hipLocations.get(0);
 		for(int i = 1; i < hipLocations.size(); i++) {
-			if(hipLocations.get(i) < curr) {
+			if(hipLocations.get(i) > curr) {
 				return false;
 			}
 			curr = hipLocations.get(i);

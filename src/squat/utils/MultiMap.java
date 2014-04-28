@@ -24,4 +24,13 @@ public class MultiMap<K,V> {
 	public List<V> get(K key) {
 		return map.get(key);
 	}
+	
+	public void remove(K key, V value) {
+		List<V> values = map.get(key);
+		for(V v : values) {
+			if(v == value) {
+				values.remove(v);
+			}
+		}
+	}
 }

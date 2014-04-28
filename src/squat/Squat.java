@@ -11,6 +11,7 @@ import squat.model.event.ModelEventListener;
 import squat.model.event.ModelEventManager;
 import squat.model.event.ModelEventType;
 import squat.model.event.SquatRepCounter;
+import squat.model.event.SquatRepScorer;
 import squat.model.event.SquatScorer;
 import squat.optimization.ModelFitter;
 import squat.optimization.ModelFitterManual;
@@ -42,7 +43,7 @@ public class Squat {
 		
 		ModelEventManager modelEventManager = new ModelEventManager();
 		
-		SquatScorer squatScorer = new SquatScorer(modelEventManager);
+		SquatRepScorer squatScorer = new SquatRepScorer(modelEventManager);
 		
 		SquatRepCounter sqrc = new SquatRepCounter(modelEventManager);
 		
@@ -85,7 +86,7 @@ public class Squat {
 		
 		System.out.println("done");
 		System.out.println("Reps: " + sqrc.getReps());
-		System.out.println("Score: " + squatScorer.getCurrentScore());
+		System.out.println("Score: " + squatScorer.getScores());
 
 	}
 
