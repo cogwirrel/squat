@@ -11,6 +11,7 @@ import squat.model.event.ModelEventListener;
 import squat.model.event.ModelEventManager;
 import squat.model.event.ModelEventType;
 import squat.model.event.SquatRepCounter;
+import squat.model.event.SquatScorer;
 import squat.optimization.ModelFitter;
 import squat.optimization.ModelFitterManual;
 import squat.optimization.ModelFitterOptim;
@@ -41,81 +42,7 @@ public class Squat {
 		
 		ModelEventManager modelEventManager = new ModelEventManager();
 		
-		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{0,255,0});
-				System.out.println("Start Below Parallel!!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{255,255,255});
-				System.out.println("End Below Parallel!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{0,255,255});
-				System.out.println("Start Lockout!!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{255,255,255});
-				System.out.println("End Lockout!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_BAD_WEIGHT_DISTRIBUTION_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{0,0,255});
-				System.out.println("Start Bad Weight Distro!!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_BAD_WEIGHT_DISTRIBUTION_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{255,255,255});
-				System.out.println("End Bad Weight Distro!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_FORWARD_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{0,0,255});
-				System.out.println("Start Knees Forward!!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_FORWARD_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{255,255,255});
-				System.out.println("End Knees Forward!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_BACKWARD_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{0,0,255});
-				System.out.println("Start Knees Backward!!!");
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_KNEE_BACKWARD_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{255,255,255});
-				System.out.println("End Knees Backward!!");
-			}
-		});
-		
-//		modelEventManager.addListener(ModelEventType.TICK, new ModelEventListener() {
-//			public void onEvent(Model m) {
-//				
-//			}
-//		});
+		SquatScorer squatScorer = new SquatScorer(modelEventManager);
 		
 		SquatRepCounter sqrc = new SquatRepCounter();
 		modelEventManager.addListener(sqrc.getEventType(), sqrc);
@@ -159,6 +86,7 @@ public class Squat {
 		
 		System.out.println("done");
 		System.out.println("Reps: " + sqrc.getReps());
+		System.out.println("Score: " + squatScorer.getCurrentScore());
 
 	}
 

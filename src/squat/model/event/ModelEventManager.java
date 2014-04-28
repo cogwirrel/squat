@@ -48,6 +48,10 @@ public class ModelEventManager {
 		// Every time we update, we call all TICK listeners
 		callListeners(ModelEventType.TICK, model);
 		
+		if(squatBadForm(model)) {
+			callListeners(ModelEventType.SQUAT_BAD_FORM, model);
+		}
+		
 		// Stateful events that have starts and ends
 		squatBelowParallel.update(model.isSquatBelowParallel());
 		squatLockout.update(model.isSquatLockedOut());
@@ -61,6 +65,11 @@ public class ModelEventManager {
 	
 	public void addListener(ModelEventType type, ModelEventListener listener) {
 		listeners.put(type, listener);
+	}
+	
+	private boolean squatBadForm(Model model) {
+		return model.isSquatKneeForward() || model.isSquatKneeBackward() ||
+				model.isSquatWeightOverFeet() || model.isSquatHeelGrounded();
 	}
 	
 	private void callListeners(ModelEventType type, Model model) {
