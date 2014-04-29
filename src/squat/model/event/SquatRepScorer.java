@@ -13,11 +13,14 @@ public class SquatRepScorer {
 	public SquatRepScorer(final ModelEventManager modelEventManager) {
 		scores = new ArrayList<Double>();
 		mainContributors = new ArrayList<String>();
-		scorer = new SquatScorer(modelEventManager);
+		
 		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_START, new ModelEventListener() {
 			public void onEvent(Model m) {
-				scores.add(scorer.getCurrentScore());
-				mainContributors.add(scorer.getMainContributor());
+				if(scorer != null) {
+					scores.add(scorer.getCurrentScore());
+					mainContributors.add(scorer.getMainContributor());
+				}
+				
 				scorer = new SquatScorer(modelEventManager);
 			}
 		});
