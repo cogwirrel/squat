@@ -27,9 +27,6 @@ public class SquatScorer {
 	
 	private ModelEventManager modelEventManager;
 	
-	private boolean didSquatBelowParallel = false;
-	private boolean didLockout = false;
-	
 	// This class is to be used to evaluate a single rep.
 	public SquatScorer(ModelEventManager modelEventManager) {
 		this.modelEventManager = modelEventManager;
