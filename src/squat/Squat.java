@@ -43,8 +43,31 @@ public class Squat {
 		
 		ModelEventManager modelEventManager = new ModelEventManager();
 		
-		SquatRepScorer squatScorer = new SquatRepScorer(modelEventManager);
+		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0, 255, 0});
+			}
+		});
 		
+		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255, 255, 255});
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0, 255, 0});
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255, 255, 255});
+			}
+		});
+		
+		SquatRepScorer squatScorer = new SquatRepScorer(modelEventManager);
 		SquatRepCounter sqrc = new SquatRepCounter(modelEventManager);
 		
 		Mat firstFrame = new Mat();
