@@ -34,7 +34,7 @@ public class Squat {
 		int height = videoInput.getHeight();
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Model Fitting", width, height);
-		VideoDisplay videoDisplay2 = new VideoDisplay("Background Subtraction", width, height);
+		//VideoDisplay videoDisplay2 = new VideoDisplay("Background Subtraction", width, height);
 		AngularModel model = new AngularModel(105, 280);
 		ModelFitter fitter = new ModelFitterOptim();
 		//ModelFitter fitter = new ModelFitterManual(width, height);
@@ -67,22 +67,23 @@ public class Squat {
 			
 			fitter.fit(model, foreground);
 			Mat m = new Mat(frame.size(), frame.type());
-			model.draw(m, modelColour);
+			//model.draw(m, modelColour);
+			model.drawSkeleton(m, modelColour);
 			
 			modelEventManager.update(model);
 			
 			videoDisplay.show(VideoTools.blend(frame, m));
 			videoDisplay.draw();
 			
-			videoDisplay2.show(foreground);
-			videoDisplay2.draw();
+//			videoDisplay2.show(foreground);
+//			videoDisplay2.draw();
 			
 			//System.out.println(frameNumber);
 			frameNumber++;
 		}
 		
 		videoDisplay.close();
-		videoDisplay2.close();
+		//videoDisplay2.close();
 		
 		System.out.println("done");
 		System.out.println("Reps: " + sqrc.getReps());

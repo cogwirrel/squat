@@ -145,6 +145,23 @@ public class AngularModel implements Model {
 
 		Core.ellipse(m, r, colour, -1);
 	}
+	
+	@Override
+	public void drawSkeleton(Mat m, Scalar colour) {
+		m.setTo(new Scalar(0,0,0));
+		
+		Point[] points = calculatePoints();
+		
+		for(Point p : points) {
+			Core.circle(m, p, 3, colour);
+		}
+		
+		Point prev = points[0];
+		for(int i = 1; i < points.length; i++) {
+			Core.line(m, prev, points[i], colour);
+			prev = points[i];
+		}
+	}
 
 	private Point calculatePoint(Point from, int to) {
 		double d = lengths[to];
