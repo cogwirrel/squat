@@ -42,11 +42,13 @@ public class ModelEventManager {
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_START,
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_END);
 	
-	private ModelEventManagerPhaseSwitch squatPhase;
+	private ModelEventManagerStateSwitch squatPhase =
+			new ModelEventManagerStateSwitch(
+					ModelEventType.SQUAT_DESCEND_START,
+					ModelEventType.SQUAT_ASCEND_START);
 	
 	public ModelEventManager() {
 		tracker = new SquatPhaseTracker(5);
-		squatPhase = new ModelEventManagerPhaseSwitch(tracker);
 	}
 	
 	public void update(Model model) {
@@ -69,7 +71,8 @@ public class ModelEventManager {
 		squatBadWeightDistribution.update(!model.isSquatWeightOverFeet());
 		squatOnHeelOrToe.update(!model.isSquatHeelGrounded());
 		
-		squatPhase.update(model);
+		tracker.add(model.getVerticalHipPosition());
+		squatPhase.update(tracker.isDescending(), tracker.isAscending());
 	}
 	
 	public void addListener(ModelEventType type, ModelEventListener listener) {
@@ -108,39 +111,24 @@ public class ModelEventManager {
 			this.endEvent = endEventToRaise;
 		}
 		
-		public void update(boolean newState) {
-			if(newState && !previousState) {
+		public void update(boolean positiveState, boolean negativeState) {
+			if(positiveState && !previousState) {
 				// Our state has changed to true, so raise the "start" event
 				callListeners(startEvent, model);
-			} else if(!newState && previousState) {
+				previousState = true;
+			} else if(negativeState && previousState) {
 				// Our state has changed to false, so raise the "end" event
 				callListeners(endEvent, model);
+				previousState = false;
 			}
-			// Set our previous state
-			previousState = newState;
+		}
+		
+		public void update(boolean newState) {
+			// When one state is given, assume the negative state is it negated
+			update(newState, !newState);
 		}
 	}
 	
-	private class ModelEventManagerPhaseSwitch {
-		private boolean descending;
-		private SquatPhaseTracker tracker;
-		
-		public ModelEventManagerPhaseSwitch(SquatPhaseTracker tracker) {
-			this.tracker = tracker;
-			this.descending = false;
-		}
-		
-		public void update(Model model) {
-			tracker.add(model.getVerticalHipPosition());
-			if(tracker.isDescending() && !descending) {
-				callListeners(ModelEventType.SQUAT_DESCEND_START, model);
-				descending = true;
-			} else if(tracker.isAscending() && descending) {
-				callListeners(ModelEventType.SQUAT_ASCEND_START, model);
-				descending = false;
-			}
-		}
-	}
 
 	
 }
