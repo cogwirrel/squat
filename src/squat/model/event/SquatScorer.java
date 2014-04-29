@@ -10,36 +10,42 @@ public class SquatScorer {
 	private int badFrameCount = 0;
 	
 	private Map<String, Integer> contributors;
+	private Map<String, Double> maxPenalties;
 	
+	// Contributors that can lower the score
 	private static final String WEIGHT_DISTRIBUTION = "Weight Distribution";
 	private static final String KNEES_FORWARD = "Knees Forward";
 	private static final String KNEES_BACKWARD = "Knees Backward";
 	private static final String FOOT_PLACEMENT = "Foot Placement";
 	private static final String ABOVE_PARALLEL = "Above Parallel";
-	
-	private static final double DEPTH_PENALTY = 0.30; // As a percentage
+	private static final String NO_LOCKOUT = "No Lockout";
 	
 	private BadFrameCounter badFrameCounter;
 	private FrameCounter frameCounter;
 	private ParallelChecker parallelChecker;
+	private LockoutChecker lockoutChecker;
 	
 	private ModelEventManager modelEventManager;
 	
 	private boolean didSquatBelowParallel = false;
+	private boolean didLockout = false;
 	
 	// This class is to be used to evaluate a single rep.
 	public SquatScorer(ModelEventManager modelEventManager) {
 		this.modelEventManager = modelEventManager;
 		
 		initialiseContributors();
+		initialiseMaxPenalties();
 		
 		badFrameCounter = new BadFrameCounter();
 		frameCounter = new FrameCounter();
 		parallelChecker = new ParallelChecker();
+		lockoutChecker = new LockoutChecker();
 		
 		modelEventManager.addListener(ModelEventType.SQUAT_BAD_FORM, badFrameCounter);
 		modelEventManager.addListener(ModelEventType.TICK, frameCounter);
 		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_START, parallelChecker);
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, lockoutChecker);
 	}
 	
 	private void initialiseContributors() {
@@ -49,7 +55,21 @@ public class SquatScorer {
 		contributors.put(KNEES_FORWARD, 0);
 		contributors.put(KNEES_BACKWARD, 0);
 		contributors.put(FOOT_PLACEMENT, 0);
-		contributors.put(ABOVE_PARALLEL, 0);
+		// Assume didn't squat below parallel or lockout
+		contributors.put(ABOVE_PARALLEL, Integer.MAX_VALUE);
+		contributors.put(NO_LOCKOUT, Integer.MAX_VALUE);
+	}
+	
+	private void initialiseMaxPenalties() {
+		maxPenalties = new HashMap<String, Double>();
+		
+		// Percentage penalties (do not need to add to 100)
+		maxPenalties.put(WEIGHT_DISTRIBUTION, 0.20);
+		maxPenalties.put(KNEES_FORWARD, 0.20);
+		maxPenalties.put(KNEES_BACKWARD, 0.10);
+		maxPenalties.put(FOOT_PLACEMENT, 0.10);
+		maxPenalties.put(ABOVE_PARALLEL, 0.30);
+		maxPenalties.put(NO_LOCKOUT, 0.30);
 	}
 	
 	private class BadFrameCounter implements ModelEventListener {
@@ -77,7 +97,13 @@ public class SquatScorer {
 	
 	private class ParallelChecker implements ModelEventListener {
 		public void onEvent(Model m) {
-			didSquatBelowParallel = true;
+			contributors.put(ABOVE_PARALLEL, 0);
+		}
+	}
+	
+	private class LockoutChecker implements ModelEventListener {
+		public void onEvent(Model m) {
+			contributors.put(NO_LOCKOUT, 0);
 		}
 	}
 	
@@ -86,11 +112,7 @@ public class SquatScorer {
 			return 0;
 		}
 		
-		if(!didSquatBelowParallel) {
-			contributors.put(ABOVE_PARALLEL, (int)(frameCount * DEPTH_PENALTY));
-		}
-		
-		double score = (1 - ((double)badFrameCount() / (double)frameCount)) * 100;
+		double score = (1 - calculatePenalty()) * 100;
 		
 		// Remove negative scores!
 		score = Math.max(0, score);
@@ -98,12 +120,25 @@ public class SquatScorer {
 		return score;
 	}
 	
-	private int badFrameCount() {
-		int count = 0;
-		for(Integer i : contributors.values()) {
-			count += i;
+	private double calculatePenalty() {
+		double penalty = 0;
+		for(String contributor : contributors.keySet()) {
+			int penaltyFrames = contributors.get(contributor);
+			double maxPenalty = maxPenalties.get(contributor);
+			double contributorPenalty = (double)penaltyFrames / (double)frameCount;
+			
+			// Normalise penalty within max penalty
+			// eg. 50% of time bad weight distro means penalty of 0.1 (as max penalty 0.2)
+			contributorPenalty *= maxPenalty;
+			
+			// Cap the penalty at the maximum value
+			if(contributorPenalty > maxPenalty) {
+				contributorPenalty = maxPenalty;
+			}
+			
+			penalty += contributorPenalty;
 		}
-		return count;
+		return penalty;
 	}
 	
 	public Map<String, Integer> getContributors() {
