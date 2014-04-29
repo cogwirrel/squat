@@ -42,6 +42,11 @@ public class ModelEventManager {
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_START,
 					ModelEventType.SQUAT_ON_HEEL_OR_TOE_END);
 	
+	private ModelEventManagerStateSwitch squatBadBackAngle =
+			new ModelEventManagerStateSwitch(
+					ModelEventType.SQUAT_BAD_BACK_ANGLE_START,
+					ModelEventType.SQUAT_BAD_BACK_ANGLE_END);
+	
 	private ModelEventManagerStateSwitch squatPhase =
 			new ModelEventManagerStateSwitch(
 					ModelEventType.SQUAT_DESCEND_START,
@@ -70,6 +75,8 @@ public class ModelEventManager {
 		
 		squatBadWeightDistribution.update(!model.isSquatWeightOverFeet());
 		squatOnHeelOrToe.update(!model.isSquatHeelGrounded());
+		
+		squatBadBackAngle.update(!model.isSquatBackAngleInOptimalRange());
 		
 		tracker.add(model.getVerticalHipPosition());
 		squatPhase.update(tracker.isDescending(), tracker.isAscending());

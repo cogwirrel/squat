@@ -7,13 +7,13 @@ import squat.model.Model;
 
 public class SquatScorer {
 	private int frameCount = 0;
-	private int badFrameCount = 0;
 	
 	private Map<String, Integer> contributors;
 	private Map<String, Double> maxPenalties;
 	
 	// Contributors that can lower the score
 	private static final String WEIGHT_DISTRIBUTION = "Weight Distribution";
+	private static final String BAD_BACK_ANGLE = "Bad Back Angle";
 	private static final String KNEES_FORWARD = "Knees Forward";
 	private static final String KNEES_BACKWARD = "Knees Backward";
 	private static final String FOOT_PLACEMENT = "Foot Placement";
@@ -49,9 +49,11 @@ public class SquatScorer {
 		contributors = new HashMap<String, Integer>();
 		
 		contributors.put(WEIGHT_DISTRIBUTION, 0);
+		contributors.put(BAD_BACK_ANGLE, 0);
 		contributors.put(KNEES_FORWARD, 0);
 		contributors.put(KNEES_BACKWARD, 0);
 		contributors.put(FOOT_PLACEMENT, 0);
+		
 		// Assume didn't squat below parallel or lockout
 		contributors.put(ABOVE_PARALLEL, Integer.MAX_VALUE);
 		contributors.put(NO_LOCKOUT, Integer.MAX_VALUE);
@@ -62,6 +64,7 @@ public class SquatScorer {
 		
 		// Percentage penalties (do not need to add to 100)
 		maxPenalties.put(WEIGHT_DISTRIBUTION, 0.20);
+		maxPenalties.put(BAD_BACK_ANGLE, 0.20);
 		maxPenalties.put(KNEES_FORWARD, 0.20);
 		maxPenalties.put(KNEES_BACKWARD, 0.10);
 		maxPenalties.put(FOOT_PLACEMENT, 0.10);
@@ -71,9 +74,12 @@ public class SquatScorer {
 	
 	private class BadFrameCounter implements ModelEventListener {
 		public void onEvent(Model m) {
-			
 			if(!m.isSquatWeightOverFeet()) {
 				contributors.put(WEIGHT_DISTRIBUTION, contributors.get(WEIGHT_DISTRIBUTION) + 1);
+			}
+			
+			if(!m.isSquatBackAngleInOptimalRange()) {
+				contributors.put(BAD_BACK_ANGLE, contributors.get(BAD_BACK_ANGLE) + 1);
 			}
 			
 			if(m.isSquatKneeForward()) {

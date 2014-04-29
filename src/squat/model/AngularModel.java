@@ -194,6 +194,11 @@ public class AngularModel implements Model {
 	}
 	
 	@Override
+	public boolean isSquatBackAngleInOptimalRange() {
+		return angles[SHOULDER_HIP] > 35 && angles[SHOULDER_HIP] < 90;
+	}
+	
+	@Override
 	public double getVerticalHipPosition() {
 		Point[] points = calculatePoints();
 		return points[HIP_KNEE].y;

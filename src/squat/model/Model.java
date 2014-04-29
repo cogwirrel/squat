@@ -19,4 +19,5 @@ public interface Model {
 	public boolean isSquatKneeBackward();
 	public boolean isSquatHeelGrounded();
 	public boolean isSquatWeightOverFeet();
+	public boolean isSquatBackAngleInOptimalRange();
 }
