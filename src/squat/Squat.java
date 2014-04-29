@@ -33,8 +33,8 @@ public class Squat {
 		int width = videoInput.getWidth();
 		int height = videoInput.getHeight();
 		
-		VideoDisplay videoDisplay = new VideoDisplay("Test", width, height);
-		VideoDisplay videoDisplay2 = new VideoDisplay("Test2", width, height);
+		VideoDisplay videoDisplay = new VideoDisplay("Model Fitting", width, height);
+		VideoDisplay videoDisplay2 = new VideoDisplay("Background Subtraction", width, height);
 		AngularModel model = new AngularModel(105, 280);
 		ModelFitter fitter = new ModelFitterOptim();
 		//ModelFitter fitter = new ModelFitterManual(width, height);
