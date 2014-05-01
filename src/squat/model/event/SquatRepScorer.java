@@ -9,11 +9,15 @@ public class SquatRepScorer {
 	private SquatScorer scorer;
 	private List<Double> scores;
 	private List<String> mainContributors;
+	private ModelEventManager modelEventManager;
 	
 	public SquatRepScorer(final ModelEventManager modelEventManager) {
 		scores = new ArrayList<Double>();
 		mainContributors = new ArrayList<String>();
-		
+		this.modelEventManager = modelEventManager;
+	}
+	
+	public void start() {
 		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_START, new ModelEventListener() {
 			public void onEvent(Model m) {
 				if(scorer != null) {

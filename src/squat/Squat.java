@@ -41,7 +41,7 @@ public class Squat {
 		
 		final Scalar modelColour = new Scalar(255,255,255);
 		
-		ModelEventManager modelEventManager = new ModelEventManager();
+		final ModelEventManager modelEventManager = new ModelEventManager();
 		
 		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_START, new ModelEventListener() {
 			public void onEvent(Model m) {
@@ -67,19 +67,31 @@ public class Squat {
 			}
 		});
 		
-		SquatRepScorer squatScorer = new SquatRepScorer(modelEventManager);
-		SquatRepCounter sqrc = new SquatRepCounter(modelEventManager);
+		final SquatRepScorer squatScorer = new SquatRepScorer(modelEventManager);
+		final SquatRepCounter sqrc = new SquatRepCounter(modelEventManager);
 		
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
+			boolean active = true;
+			public void onEvent(Model m) {
+				if(active) {
+					// Start rep scoring and counting when squat is first locked out
+					squatScorer.start();
+					sqrc.start();
+					active = false;
+				}
+			}
+		});	
+			
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
 			firstFrame = videoInput.getNextFrame();
 		}
 		
 		int frameNumber = 0;
-		while(frameNumber < 400 && videoInput.hasNextFrame()) {
-			videoInput.getNextFrame();
-			frameNumber++;
-		}
+//		while(frameNumber < 400 && videoInput.hasNextFrame()) {
+//			videoInput.getNextFrame();
+//			frameNumber++;
+//		}
 
 		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 30);
 		
