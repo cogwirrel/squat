@@ -33,7 +33,7 @@ public class ModelFitterOptim implements ModelFitter {
 				double[] results = p.getPoint();
 				model.set(results);
 		} catch(Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 	}

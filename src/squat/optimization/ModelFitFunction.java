@@ -40,7 +40,7 @@ public class ModelFitFunction implements MultivariateFunction {
 			Core.bitwise_and(m1, m2, res);
 			overlap = Core.countNonZero(res);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return overlap;
 	}
