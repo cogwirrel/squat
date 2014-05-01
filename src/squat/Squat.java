@@ -74,18 +74,6 @@ public class Squat {
 		
 		final SquatRepScorer squatScorer = new SquatRepScorer(modelEventManager);
 		final SquatRepCounter sqrc = new SquatRepCounter(modelEventManager);
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
-			boolean active = true;
-			public void onEvent(Model m) {
-				if(active) {
-					// Start rep scoring and counting when squat is first locked out
-					squatScorer.start();
-					sqrc.start();
-					active = false;
-				}
-			}
-		});	
 			
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
@@ -112,6 +100,12 @@ public class Squat {
 			initFit.fit(model, bg.subtract(frm));
 		}
 		
+		// We have the initial model fitted
+		// Start the main squat analysis
+		squatScorer.start();
+		sqrc.start();
+		
+		// Main loop
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
 			
