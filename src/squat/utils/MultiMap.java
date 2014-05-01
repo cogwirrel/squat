@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 public class MultiMap<K,V> {
 	private Map<K,List<V>> map;
@@ -27,9 +28,9 @@ public class MultiMap<K,V> {
 	
 	public void remove(K key, V value) {
 		List<V> values = map.get(key);
-		for(V v : values) {
-			if(v == value) {
-				values.remove(v);
+		for(Iterator<V> it = values.iterator(); it.hasNext();) {
+			if(it.next() == value) {
+				it.remove();
 			}
 		}
 	}
