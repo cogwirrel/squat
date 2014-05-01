@@ -56,8 +56,8 @@ public class AngularModel implements Model {
 	private void initialiseAngles() {
 		angles[HEAD_SHOULDER] = 90;
 		angles[SHOULDER_HIP] = 90;
-		angles[HIP_KNEE] = 120;
-		angles[KNEE_ANKLE] = 45;
+		angles[HIP_KNEE] = 90;
+		angles[KNEE_ANKLE] = 90;
 		angles[ANKLE_TOE] = 180;
 	}
 	
@@ -75,6 +75,14 @@ public class AngularModel implements Model {
 			values[i] = angles[i];
 		}
 		return values;
+	}
+	
+	public void setInitParams(double[] values) {
+		foot = new Point(values[0], values[1]);
+	}
+	
+	public double[] getInitParams() {
+		return new double[]{foot.x, foot.y};
 	}
 	
 	// TODO: Sort out the actual bounds for knees - may need to do something clever with mod?

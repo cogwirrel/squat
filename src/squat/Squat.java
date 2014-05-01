@@ -16,6 +16,7 @@ import squat.model.event.SquatScorer;
 import squat.optimization.ModelFitter;
 import squat.optimization.ModelFitterManual;
 import squat.optimization.ModelFitterOptim;
+import squat.optimization.ModelInitialisationFitterOptim;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
 import squat.utils.VideoDisplay;
@@ -35,7 +36,11 @@ public class Squat {
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Skeleton", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Model Fit", width, height);
-		AngularModel model = new AngularModel(105, 280);
+		
+		// Initialise the model
+		// Optimise foot location for upright model
+		
+		AngularModel model = new AngularModel(width/2, height/2);
 		ModelFitter fitter = new ModelFitterOptim();
 		//ModelFitter fitter = new ModelFitterManual(width, height);
 		
@@ -88,12 +93,24 @@ public class Squat {
 		}
 		
 		int frameNumber = 0;
-//		while(frameNumber < 400 && videoInput.hasNextFrame()) {
-//			videoInput.getNextFrame();
-//			frameNumber++;
-//		}
+		while(frameNumber < 400 && videoInput.hasNextFrame()) {
+			videoInput.getNextFrame();
+			frameNumber++;
+		}
 
 		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 30);
+		
+		// Initial fitting!!
+		ModelFitter initFit = new ModelInitialisationFitterOptim();
+		
+		Mat frm = new Mat();
+		if(videoInput.hasNextFrame()) {
+			frm = videoInput.getNextFrame();
+		}
+		
+		for(int i = 0; i < 5; i++) {
+			initFit.fit(model, bg.subtract(frm));
+		}
 		
 		while(videoInput.hasNextFrame()) {
 			Mat frame = videoInput.getNextFrame();
