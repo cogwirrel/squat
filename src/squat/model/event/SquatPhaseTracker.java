@@ -4,23 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import squat.model.Model;
+import squat.utils.FixedQueue;
 
 public class SquatPhaseTracker {
-	private List<Double> hipLocations = new ArrayList<Double>();
+	private FixedQueue<Double> hipLocations;
 	private int numLocations;
 	private double thresh;
 	
 	public SquatPhaseTracker(int numLocations) {
 		this.numLocations = numLocations;
 		this.thresh = numLocations;
+		hipLocations = new FixedQueue<Double>(numLocations);
 	}
 	
 	public void add(double location) {
 		hipLocations.add(location);
-		
-		if(hipLocations.size() > numLocations) {
-			hipLocations.remove(0);
-		}
 	}
 	
 	public boolean isDescending() {
@@ -59,7 +57,7 @@ public class SquatPhaseTracker {
 	
 	private double minimum() {
 		double min = Double.MAX_VALUE;
-		for(Double d : hipLocations) {
+		for(Double d : hipLocations.getList()) {
 			if(d < min) {
 				min = d;
 			}
@@ -69,7 +67,7 @@ public class SquatPhaseTracker {
 	
 	private double maximum() {
 		double max = Double.MIN_VALUE;
-		for(Double d : hipLocations) {
+		for(Double d : hipLocations.getList()) {
 			if(d > max) {
 				max = d;
 			}
@@ -79,7 +77,7 @@ public class SquatPhaseTracker {
 	
 	private double average() {
 		double total = 0;
-		for(Double d : hipLocations) {
+		for(Double d : hipLocations.getList()) {
 			total += d;
 		}
 		return total / hipLocations.size();

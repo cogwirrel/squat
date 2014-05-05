@@ -22,8 +22,6 @@ public class ModelInitialisationFitFunction implements MultivariateFunction {
 		
 		model.setInitParams(feet);
 		
-		System.out.println("Foot x " + feet[0] + " y " + feet[1]);
-		
 		Mat m = new Mat(frame.size(), frame.type());
 		model.draw(m);
 		

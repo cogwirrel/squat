@@ -3,6 +3,7 @@ package squat.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
@@ -10,6 +11,12 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class FigureDetector {
+	public boolean hasFigure(Mat frame) {
+		int foregroundPixels = Core.countNonZero(frame);
+		double foregroundProportion = (double)foregroundPixels / (double)(frame.cols() * frame.rows());
+		return foregroundProportion > 0.08;
+	}
+	
 	public Pair<Mat, List<MatOfPoint>> detect(Mat frame) {
 		Mat edges = new Mat(frame.size(), frame.type());
 		

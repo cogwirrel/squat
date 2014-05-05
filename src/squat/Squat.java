@@ -19,6 +19,7 @@ import squat.optimization.ModelFitterOptim;
 import squat.optimization.ModelInitialisationFitterOptim;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
+import squat.utils.FigureDetector;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoInput;
 import squat.utils.VideoTools;
@@ -80,13 +81,19 @@ public class Squat {
 			firstFrame = videoInput.getNextFrame();
 		}
 		
-		int frameNumber = 0;
-		while(frameNumber < 400 && videoInput.hasNextFrame()) {
-			videoInput.getNextFrame();
-			frameNumber++;
-		}
-
 		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 30);
+		
+		SquatSetup squatSetup = new SquatSetup(bg, firstFrame);
+		while(!squatSetup.ready() && videoInput.hasNextFrame()) {
+			Mat frame = videoInput.getNextFrame();
+			videoDisplay.show(frame);
+			videoDisplay.draw();
+			squatSetup.update(frame);
+		}
+		
+		System.out.println("Ready to squat!");
+		
+		// We have got to the point where the lifter is ready to squat, so perform initial fitting
 		
 		// Initial fitting!!
 		ModelFitter initFit = new ModelInitialisationFitterOptim();
@@ -96,7 +103,7 @@ public class Squat {
 			frm = videoInput.getNextFrame();
 		}
 		
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 3; i++) {
 			initFit.fit(model, bg.subtract(frm));
 		}
 		
@@ -126,7 +133,7 @@ public class Squat {
 			videoDisplay2.draw();
 			
 			//System.out.println(frameNumber);
-			frameNumber++;
+			//frameNumber++;
 		}
 		
 		videoDisplay.close();

@@ -53,4 +53,12 @@ public class VideoTools {
 		Core.addWeighted(m1, 0.5, m2, 0.5, 0, blended);
 		return blended;
 	}
+	
+	public static int countDifference(Mat m1, Mat m2) {
+		Mat nm1 = new Mat(m1.size(), m1.type());
+		Core.bitwise_not(m1, nm1);
+		Mat diff = new Mat(m1.size(), m1.type());
+		Core.bitwise_and(m2, nm1, diff);
+		return Core.countNonZero(diff);
+	}
 }
