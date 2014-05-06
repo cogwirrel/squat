@@ -2,8 +2,12 @@ package squat;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import squat.model.AngularModel;
 import squat.model.Model;
@@ -37,13 +41,6 @@ public class Squat {
 		
 		VideoDisplay videoDisplay = new VideoDisplay("Skeleton", width, height);
 		VideoDisplay videoDisplay2 = new VideoDisplay("Model Fit", width, height);
-		
-		// Initialise the model
-		// Optimise foot location for upright model
-		
-		AngularModel model = new AngularModel(width/2, height/2);
-		ModelFitter fitter = new ModelFitterOptim();
-		//ModelFitter fitter = new ModelFitterManual(width, height);
 		
 		final Scalar modelColour = new Scalar(255,255,255);
 		
@@ -84,16 +81,49 @@ public class Squat {
 		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 30);
 		
 		SquatSetup squatSetup = new SquatSetup(bg, firstFrame);
+		Mat readyFrame = new Mat();
 		while(!squatSetup.ready() && videoInput.hasNextFrame()) {
-			Mat frame = videoInput.getNextFrame();
-			videoDisplay.show(frame);
+			readyFrame = videoInput.getNextFrame();
+			videoDisplay.show(readyFrame);
 			videoDisplay.draw();
-			squatSetup.update(frame);
+			squatSetup.update(readyFrame);
 		}
 		
 		System.out.println("Ready to squat!");
 		
-		// We have got to the point where the lifter is ready to squat, so perform initial fitting
+		// We have got to the point where the lifter is ready to squat
+		
+		// Find where to put the model and how large to make it
+		
+		Mat readyForeground = bg.subtract(readyFrame);
+		// Calculate the height and centre point of the foreground blob - ie. the figure
+		MatOfPoint figureContours = VideoTools.largestObject(readyForeground);
+		Rect figureBound = Imgproc.boundingRect(figureContours);
+		int figureHeight = figureBound.height;
+		System.out.println("Figure Height: " + figureHeight);
+		Point figureCentre = new Point(figureBound.x + figureBound.width / 2, figureBound.y + figureBound.height / 2);
+		System.out.println("Figure x: " + figureCentre.x + " y: " + figureCentre.y);
+		
+		// Initialise the model in a sensible location
+		AngularModel model = new AngularModel(figureCentre.x - figureBound.width / 2, figureCentre.y + figureHeight / 2);
+		Mat modelScaleMat = new Mat(readyForeground.size(), readyForeground.type());
+		model.draw(modelScaleMat);
+		
+		// Calculate the height of the model
+		MatOfPoint modelContours = VideoTools.largestObject(modelScaleMat);
+		Rect modelBound = Imgproc.boundingRect(modelContours);
+		int modelHeight = modelBound.height;
+		
+		System.out.println("Model Height: " + modelHeight);
+		
+		// Calculate the scaling factor to best fit the model to the figure
+		double scale = (double)figureHeight / (double)modelHeight;
+		model.setScale(scale);
+		
+		System.out.println("SCALE: " + scale);
+		
+		ModelFitter fitter = new ModelFitterOptim();
+		//ModelFitter fitter = new ModelFitterManual(width, height);
 		
 		// Initial fitting!!
 		ModelFitter initFit = new ModelInitialisationFitterOptim();

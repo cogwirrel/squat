@@ -21,6 +21,8 @@ public class AngularModel implements Model {
 	
 	private static final int DEGREES_OF_FREEDOM = NUM_JOINTS;
 	
+	private double scale = 1;
+	
 	// The position of the toe is fixed.
 	private Point foot;// = new Point(105, 280);
 	
@@ -35,6 +37,10 @@ public class AngularModel implements Model {
 		initialiseWidths();
 		initialiseLengths();
 		initialiseAngles();
+	}
+	
+	public void setScale(double scale) {
+		this.scale = scale;
 	}
 	
 	private void initialiseWidths() {
@@ -138,10 +144,10 @@ public class AngularModel implements Model {
 		}
 		
 		// Draw the bar on the lifter's back
-		Core.circle(m, points[SHOULDER_HIP], 30, colour, -1);
+		Core.circle(m, points[SHOULDER_HIP], (int)(30 * scale), colour, -1);
 		
 		// Draw a small circle for the butt!
-		Core.circle(m, points[HIP_KNEE], 5, colour, -1);
+		Core.circle(m, points[HIP_KNEE], (int)(5 * scale), colour, -1);
 		
 		// We have drawn the model, so clear the points cache
 		cachedPoints = null;
@@ -149,7 +155,7 @@ public class AngularModel implements Model {
 	
 	private void drawBodyPart(Mat m, Point from, Point to, int toIndex, Scalar colour) {
 		Point centre = PointUtils.centre(from, to);
-		RotatedRect r = new RotatedRect(centre, new Size(widths[toIndex], 10 + PointUtils.distance(from, to)), 90 + angles[toIndex]);
+		RotatedRect r = new RotatedRect(centre, new Size(scale * widths[toIndex], scale * (10 + PointUtils.distance(from, to))), 90 + angles[toIndex]);
 
 		Core.ellipse(m, r, colour, -1);
 	}
@@ -172,7 +178,7 @@ public class AngularModel implements Model {
 	}
 
 	private Point calculatePoint(Point from, int to) {
-		double d = lengths[to];
+		double d = scale * lengths[to];
 		double x = from.x + d * Math.cos(Math.toRadians(180 + angles[to]));
 		double y = from.y + d * Math.sin(Math.toRadians(180 + angles[to]));
 		return new Point((int)x, (int)y);

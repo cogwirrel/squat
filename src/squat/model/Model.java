@@ -9,6 +9,7 @@ public interface Model {
 	public void drawSkeleton(Mat m, Scalar colour);
 	public void set(double[] values);
 	public void setInitParams(double[] values);
+	public void setScale(double scale);
 	public double[] getInitParams();
 	public double[] get();
 	public double[] getUpperBounds();
