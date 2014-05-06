@@ -32,6 +32,9 @@ public class Squat {
 
 	static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
 	
+	private static final int INIT_FITTING_ITERATIONS = 3;
+	private static final int FITTING_ITERATIONS = 2;
+	
 	public static void main(String[] args) throws Exception {
 		
 		VideoInput videoInput = new VideoInput("/home/jack/squat_vids/stable/good_squats.avi", true);
@@ -133,7 +136,7 @@ public class Squat {
 			frm = videoInput.getNextFrame();
 		}
 		
-		for(int i = 0; i < 3; i++) {
+		for(int i = 0; i < INIT_FITTING_ITERATIONS; i++) {
 			initFit.fit(model, bg.subtract(frm));
 		}
 		
@@ -148,7 +151,10 @@ public class Squat {
 			
 			Mat foreground = bg.subtract(frame);
 			
-			fitter.fit(model, foreground);
+			for(int i = 0; i < FITTING_ITERATIONS; i++) {
+				fitter.fit(model, foreground);
+			}
+			
 			Mat m = new Mat(frame.size(), frame.type());
 			Mat m2 = new Mat(frame.size(), frame.type());
 			model.draw(m2, modelColour);
