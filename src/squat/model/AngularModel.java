@@ -44,27 +44,27 @@ public class AngularModel implements Model {
 	}
 	
 	private void initialiseWidths() {
-		widths[HEAD_SHOULDER] = 30;
-		widths[SHOULDER_HIP] = 40;
-		widths[HIP_KNEE] = 30;
-		widths[KNEE_ANKLE] = 20;
-		widths[ANKLE_TOE] = 10;
+		widths[HEAD_SHOULDER] = 15; //30;
+		widths[SHOULDER_HIP] = 20;//40;
+		widths[HIP_KNEE] = 15;//30;
+		widths[KNEE_ANKLE] = 10;//20;
+		widths[ANKLE_TOE] = 5;//10;
 	}
 	
 	private void initialiseLengths() {
-		lengths[HEAD_SHOULDER] = 20;
-		lengths[SHOULDER_HIP] = 78;
-		lengths[HIP_KNEE] = 55;
-		lengths[KNEE_ANKLE] = 52;
-		lengths[ANKLE_TOE] = 20;
+		lengths[HEAD_SHOULDER] = 10;//20;
+		lengths[SHOULDER_HIP] = 39;//78;
+		lengths[HIP_KNEE] = 27.5;//55;
+		lengths[KNEE_ANKLE] = 26;//52;
+		lengths[ANKLE_TOE] = 10;//20;
 	}
 	
 	private void initialiseAngles() {
 		angles[HEAD_SHOULDER] = 90;
-		angles[SHOULDER_HIP] = 90;
-		angles[HIP_KNEE] = 90;
+		angles[SHOULDER_HIP] = 80;
+		angles[HIP_KNEE] = 95;
 		angles[KNEE_ANKLE] = 90;
-		angles[ANKLE_TOE] = 180;
+		angles[ANKLE_TOE] = 170;
 	}
 	
 	public void set(double[] values) {
@@ -108,7 +108,7 @@ public class AngularModel implements Model {
 			0,
 			45,
 			45,
-			170
+			165
 		};
 	}
 
@@ -144,10 +144,10 @@ public class AngularModel implements Model {
 		}
 		
 		// Draw the bar on the lifter's back
-		Core.circle(m, points[SHOULDER_HIP], (int)(30 * scale), colour, -1);
+		Core.circle(m, points[SHOULDER_HIP], (int)(15 * scale), colour, -1);
 		
 		// Draw a small circle for the butt!
-		Core.circle(m, points[HIP_KNEE], (int)(5 * scale), colour, -1);
+		Core.circle(m, points[HIP_KNEE], (int)(2.5 * scale), colour, -1);
 		
 		// We have drawn the model, so clear the points cache
 		cachedPoints = null;
@@ -155,7 +155,7 @@ public class AngularModel implements Model {
 	
 	private void drawBodyPart(Mat m, Point from, Point to, int toIndex, Scalar colour) {
 		Point centre = PointUtils.centre(from, to);
-		RotatedRect r = new RotatedRect(centre, new Size(scale * widths[toIndex], scale * (10 + PointUtils.distance(from, to))), 90 + angles[toIndex]);
+		RotatedRect r = new RotatedRect(centre, new Size(scale * widths[toIndex], (10 + PointUtils.distance(from, to))), 90 + angles[toIndex]);
 
 		Core.ellipse(m, r, colour, -1);
 	}
