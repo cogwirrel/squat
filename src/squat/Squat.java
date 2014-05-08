@@ -39,7 +39,9 @@ public class Squat {
 		VideoDisplay videoDisplay = new VideoDisplay("Display", videoInput.getWidth(), videoInput.getHeight());
 		
 		SquatPipeline squatPipeline = new SquatPipeline(videoInput, videoDisplay);
-		squatPipeline.process();
+		while(!squatPipeline.completed()) {
+			squatPipeline.process();
+		}
 		
 		// Cycle through the last few frames
 		while(videoInput.hasNextFrame()) {

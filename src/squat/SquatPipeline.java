@@ -25,6 +25,7 @@ public class SquatPipeline {
 	private static final int INIT_FITTING_ITERATIONS = 3;
 	private VideoInput videoInput;
 	private VideoDisplay videoDisplay;
+	private boolean completed = false;
 	
 	public SquatPipeline(VideoInput videoInput, VideoDisplay videoDisplay) {
 		this.videoInput = videoInput;
@@ -80,11 +81,13 @@ public class SquatPipeline {
 			squatSetup.update(readyFrame);
 		}
 		
+		System.out.println("Squat setup complete");
+		
 		// We have got to the point where the lifter is ready to squat
 		
 		// Find where to put the model and how large to make it
-		
 		Mat readyForeground = bg.subtract(readyFrame);
+		
 		// Calculate the height and centre point of the foreground blob - ie. the figure
 		MatOfPoint figureContours = VideoTools.largestObject(readyForeground);
 		Rect figureBound = Imgproc.boundingRect(figureContours);
@@ -135,9 +138,17 @@ public class SquatPipeline {
 			videoDisplay.show(VideoTools.blend(frame, m));
 			videoDisplay.draw();
 		}
+		
+		squatTracker.stop();
+		
+		completed = squatTracker.getReps() > 0;
 
 		System.out.println("done");
 		System.out.println("Reps: " + squatTracker.getReps());
 		System.out.println("Score: " + squatTracker.getScores());
+	}
+	
+	public boolean completed() {
+		return completed;
 	}
 }

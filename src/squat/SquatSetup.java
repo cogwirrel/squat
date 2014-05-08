@@ -8,8 +8,8 @@ import squat.utils.FixedQueue;
 import squat.utils.VideoTools;
 
 public class SquatSetup {
-	private static final int FRAME_SKIP = 5;
-	private static final int NUM_DIFFERENCES = 10;
+	private static final int FRAME_SKIP = 3;
+	private static final int NUM_DIFFERENCES = 6;
 	private static final double MOTION_THRESHOLD = 0.5;
 	
 	private BackgroundSubtractor bg;
@@ -33,6 +33,8 @@ public class SquatSetup {
 			int pixelDifference = VideoTools.countDifference(foreground, prevForeground);
 			double difference = 100 * (double)pixelDifference / (double)(frame.cols() * frame.rows());
 			differences.add(difference);
+			
+			System.out.println(difference);
 			
 			ready = differencesBelowThreshold();
 			

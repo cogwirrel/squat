@@ -10,6 +10,7 @@ public class SquatRepScorer {
 	private List<Double> scores;
 	private List<String> mainContributors;
 	private ModelEventManager modelEventManager;
+	private boolean stopped = false;
 	
 	public SquatRepScorer(final ModelEventManager modelEventManager) {
 		scores = new ArrayList<Double>();
@@ -20,14 +21,24 @@ public class SquatRepScorer {
 	public void start() {
 		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_START, new ModelEventListener() {
 			public void onEvent(Model m) {
-				if(scorer != null) {
-					scores.add(scorer.getCurrentScore());
-					mainContributors.add(scorer.getMainContributor());
+				if(!stopped) {
+					if(scorer != null) {
+						scores.add(scorer.getCurrentScore());
+						mainContributors.add(scorer.getMainContributor());
+					}
+					
+					scorer = new SquatScorer(modelEventManager);
 				}
-				
-				scorer = new SquatScorer(modelEventManager);
 			}
 		});
+	}
+	
+	public void stop() {
+		stopped = true;
+		if(scorer != null) {
+			scores.add(scorer.getCurrentScore());
+			mainContributors.add(scorer.getMainContributor());
+		}
 	}
 	
 	public List<Double> getScores() {
