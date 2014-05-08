@@ -1,5 +1,6 @@
 package squat.tracking;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -16,6 +17,7 @@ import squat.optimization.ModelFitter;
 import squat.optimization.ModelInitialisationFitterOptim;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
+import squat.utils.Value;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoInput;
 import squat.utils.VideoTools;
@@ -34,34 +36,7 @@ public class SquatPipeline {
 	
 	public void process() {
 		final Scalar modelColour = new Scalar(255,255,255);
-		
-		final ModelEventManager modelEventManager = new ModelEventManager();
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{0, 255, 0});
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{255, 255, 255});
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{0, 255, 0});
-			}
-		});
-		
-		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_END, new ModelEventListener() {
-			public void onEvent(Model m) {
-				modelColour.set(new double[]{255, 255, 255});
-			}
-		});
-		
-		
+
 		Mat firstFrame = new Mat();
 		if(videoInput.hasNextFrame()) {
 			firstFrame = videoInput.getNextFrame();
@@ -121,6 +96,47 @@ public class SquatPipeline {
 		
 		// We have the initial model fitted
 		// Start the main squat analysis
+		
+		final ModelEventManager modelEventManager = new ModelEventManager();
+		final Value<Boolean> drawWeightDistroLine = new Value<Boolean>();
+		drawWeightDistroLine.set(false);
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0, 255, 0});
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_BELOW_PARALLEL_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255, 255, 255});
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{0, 255, 0});
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_LOCKOUT_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				modelColour.set(new double[]{255, 255, 255});
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_BAD_WEIGHT_DISTRIBUTION_START, new ModelEventListener() {
+			public void onEvent(Model m) {
+				drawWeightDistroLine.set(true);
+			}
+		});
+		
+		modelEventManager.addListener(ModelEventType.SQUAT_BAD_WEIGHT_DISTRIBUTION_END, new ModelEventListener() {
+			public void onEvent(Model m) {
+				drawWeightDistroLine.set(false);
+			}
+		});
+		
 		SquatTracker squatTracker = new SquatTracker(model, modelEventManager, bg);
 		squatTracker.start();
 		
@@ -133,6 +149,10 @@ public class SquatPipeline {
 			Mat m = new Mat(frame.size(), frame.type());
 
 			model.drawSkeleton(m, modelColour);
+			
+			if(drawWeightDistroLine.get()) {
+				model.drawWeightDistributionLine(m, new Scalar(0,0,255));
+			}
 			
 			videoDisplay.show(VideoTools.blend(frame, m));
 			videoDisplay.draw();

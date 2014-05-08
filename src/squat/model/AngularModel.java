@@ -176,6 +176,11 @@ public class AngularModel implements Model {
 			prev = points[i];
 		}
 	}
+	
+	public void drawWeightDistributionLine(Mat m, Scalar colour) {
+		Point[] points = calculatePoints();
+		Core.line(m, points[SHOULDER_HIP], new Point(points[SHOULDER_HIP].x, points[ANKLE_TOE].y), colour);
+	}
 
 	private Point calculatePoint(Point from, int to) {
 		double d = scale * lengths[to];
