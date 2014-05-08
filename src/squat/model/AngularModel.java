@@ -201,7 +201,11 @@ public class AngularModel implements Model {
 
 	@Override
 	public boolean isSquatKneeForward() {
-		return angles[KNEE_ANKLE] < 60;
+		// Knee is forward if it goes too far beyond the front of the foot
+		Point[] points = calculatePoints();
+		double kneeX = points[HIP_KNEE].x;
+		double footX = points[ANKLE_TOE].x;
+		return kneeX < (footX - 10 * scale);
 	}
 
 	@Override
@@ -218,10 +222,9 @@ public class AngularModel implements Model {
 	public boolean isSquatWeightOverFeet() {
 		Point[] points = calculatePoints();
 		double weightX = points[SHOULDER_HIP].x;
-		double footX = points[ANKLE_TOE].x;
-		double difference = Math.abs(weightX - footX);
-		// TODO put in appropriate difference between heel joint and shoulder
-		return difference < 40;
+		double heelX = points[KNEE_ANKLE].x;
+		double toeX = points[ANKLE_TOE].x;
+		return (toeX - 10 * scale) < weightX && weightX < (heelX + 10 * scale);
 	}
 	
 	@Override
