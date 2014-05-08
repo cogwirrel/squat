@@ -28,11 +28,13 @@ public class SquatPipeline {
 	private static final int INIT_FITTING_ITERATIONS = 3;
 	private VideoInput videoInput;
 	private VideoDisplay videoDisplay;
+	private SquatPipelineListener listener;
 	private boolean completed = false;
 	
-	public SquatPipeline(VideoInput videoInput, VideoDisplay videoDisplay) {
+	public SquatPipeline(VideoInput videoInput, VideoDisplay videoDisplay, SquatPipelineListener listener) {
 		this.videoInput = videoInput;
 		this.videoDisplay = videoDisplay;
+		this.listener = listener;
 	}
 	
 	public void process() {
@@ -81,6 +83,8 @@ public class SquatPipeline {
 			squatSetup.update(readyFrame);
 		}
 		
+		listener.onReadyToSquat();
+		
 		// We have got to the point where the lifter is ready to squat
 		
 		// Find where to put the model and how large to make it
@@ -118,6 +122,8 @@ public class SquatPipeline {
 			initFit.fit(model, bg.subtract(frm));
 		}
 		
+		listener.onInitialModelFit();
+		
 		// We have the initial model fitted
 		// Start the main squat analysis
 		SquatTracker squatTracker = new SquatTracker(model, modelEventManager, bg);
@@ -140,12 +146,7 @@ public class SquatPipeline {
 		squatTracker.stop();
 		
 		completed = squatTracker.getReps() > 0;
-
-		System.out.println("done");
-		System.out.println("Reps: " + squatTracker.getReps());
-		List<Pair<Double,String>> scores = squatTracker.getScores();
-		for(int i = 0; i < scores.size(); i++) {
-			System.out.println("Rep " + (i+1) + " {Score: " + scores.get(i).l + "%, Problem: " + scores.get(i).r + "}");
-		}
+		
+		listener.onSquatsComplete(squatTracker.getScores());		
 	}
 }
