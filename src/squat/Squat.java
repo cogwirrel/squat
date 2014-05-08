@@ -14,7 +14,6 @@ import squat.utils.VideoInput;
 public class Squat {
 
 	static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
-	
 
 	public static void main(String[] args) throws Exception {
 		processVideo("/home/jack/squat_vids/stable/good_squats.avi");

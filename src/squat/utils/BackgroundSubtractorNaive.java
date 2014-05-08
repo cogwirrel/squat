@@ -14,14 +14,12 @@ public class BackgroundSubtractorNaive implements BackgroundSubtractor {
 	double threshold;
 	
 	public BackgroundSubtractorNaive(Mat background, double threshold) {
-		Core.split(background, this.background);//VideoTools.toGreyscale(background);
+		Core.split(background, this.background);
 		this.threshold = threshold;
 	}
 	
 	@Override
 	public Mat subtract(Mat frame) {
-		//frame = VideoTools.toGreyscale(frame);
-		Mat foreground = new Mat();
 		List<Mat> frameChannels = new ArrayList<Mat>();
 		Core.split(frame, frameChannels);
 		
@@ -33,7 +31,7 @@ public class BackgroundSubtractorNaive implements BackgroundSubtractor {
 			Core.absdiff(background.get(i), frameChannels.get(i), results.get(i));
 			Imgproc.threshold(results.get(i), results.get(i), threshold, 255, Imgproc.THRESH_BINARY);
 			Core.bitwise_or(result, results.get(i), result);
-		}		
+		}
 
 		return result;
 	}

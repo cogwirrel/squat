@@ -8,11 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Size;
-
-import squat.model.Model;
 
 public class VideoDisplay {
 	private JFrame jFrame;

@@ -1,7 +1,6 @@
 package squat.optimization;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,10 +12,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Size;
-
 import squat.model.Model;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoTools;
@@ -39,7 +35,6 @@ public class ModelFitterManual implements ModelFitter {
 	public void fit(final Model model, final Mat frame) {
 		done = false;
 		
-		Mat blended = new Mat();
 		Mat m = new Mat(frame.size(), frame.type());
 		model.draw(m);
 		

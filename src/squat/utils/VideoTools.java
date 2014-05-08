@@ -8,7 +8,6 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -89,5 +88,17 @@ public class VideoTools {
 			}
 		}
 		return largestContourIndex;
+	}
+	
+	public static int numberOverlappingPixels(Mat m1, Mat m2) {
+		Mat res = new Mat();
+		int overlap = 0;
+		try {
+			Core.bitwise_and(m1, m2, res);
+			overlap = Core.countNonZero(res);
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		return overlap;
 	}
 }

@@ -1,18 +1,12 @@
 package squat.tracking;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import squat.model.Model;
 import squat.utils.FixedQueue;
 
 public class SquatPhaseTracker {
 	private FixedQueue<Double> hipLocations;
-	private int numLocations;
 	private double thresh;
 	
 	public SquatPhaseTracker(int numLocations) {
-		this.numLocations = numLocations;
 		this.thresh = numLocations;
 		hipLocations = new FixedQueue<Double>(numLocations);
 	}
@@ -73,13 +67,5 @@ public class SquatPhaseTracker {
 			}
 		}
 		return max;
-	}
-	
-	private double average() {
-		double total = 0;
-		for(Double d : hipLocations.getList()) {
-			total += d;
-		}
-		return total / hipLocations.size();
 	}
 }

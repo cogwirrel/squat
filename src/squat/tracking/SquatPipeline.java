@@ -1,7 +1,5 @@
 package squat.tracking;
 
-import java.util.List;
-
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -15,11 +13,9 @@ import squat.model.event.ModelEventListener;
 import squat.model.event.ModelEventManager;
 import squat.model.event.ModelEventType;
 import squat.optimization.ModelFitter;
-import squat.optimization.ModelFitterOptim;
 import squat.optimization.ModelInitialisationFitterOptim;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
-import squat.utils.Pair;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoInput;
 import squat.utils.VideoTools;
@@ -29,7 +25,6 @@ public class SquatPipeline {
 	private VideoInput videoInput;
 	private VideoDisplay videoDisplay;
 	private SquatPipelineListener listener;
-	private boolean completed = false;
 	
 	public SquatPipeline(VideoInput videoInput, VideoDisplay videoDisplay, SquatPipelineListener listener) {
 		this.videoInput = videoInput;
@@ -144,8 +139,6 @@ public class SquatPipeline {
 		}
 		
 		squatTracker.stop();
-		
-		completed = squatTracker.getReps() > 0;
 		
 		listener.onSquatsComplete(squatTracker.getScores());		
 	}
