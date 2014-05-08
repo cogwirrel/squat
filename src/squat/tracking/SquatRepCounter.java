@@ -1,6 +1,9 @@
-package squat.model.event;
+package squat.tracking;
 
 import squat.model.Model;
+import squat.model.event.ModelEventListener;
+import squat.model.event.ModelEventManager;
+import squat.model.event.ModelEventType;
 
 public class SquatRepCounter {
 

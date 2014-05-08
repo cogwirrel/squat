@@ -6,8 +6,6 @@ import org.opencv.core.Mat;
 
 import squat.model.Model;
 import squat.model.event.ModelEventManager;
-import squat.model.event.SquatRepCounter;
-import squat.model.event.SquatRepScorer;
 import squat.optimization.ModelFitter;
 import squat.optimization.ModelFitterOptim;
 import squat.utils.BackgroundSubtractor;

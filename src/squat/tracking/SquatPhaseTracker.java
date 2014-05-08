@@ -1,4 +1,4 @@
-package squat.model.event;
+package squat.tracking;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,12 @@
-package squat.model.event;
+package squat.tracking;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import squat.model.Model;
+import squat.model.event.ModelEventListener;
+import squat.model.event.ModelEventManager;
+import squat.model.event.ModelEventType;
 
 public class SquatScorer {
 	private int frameCount = 0;

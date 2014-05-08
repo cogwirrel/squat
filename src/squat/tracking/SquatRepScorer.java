@@ -1,9 +1,12 @@
-package squat.model.event;
+package squat.tracking;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import squat.model.Model;
+import squat.model.event.ModelEventListener;
+import squat.model.event.ModelEventManager;
+import squat.model.event.ModelEventType;
 import squat.utils.Pair;
 
 public class SquatRepScorer {

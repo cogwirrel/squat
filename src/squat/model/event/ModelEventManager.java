@@ -3,6 +3,7 @@ package squat.model.event;
 import java.util.List;
 
 import squat.model.Model;
+import squat.tracking.SquatPhaseTracker;
 import squat.utils.MultiMap;
 
 public class ModelEventManager {
