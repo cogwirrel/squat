@@ -15,20 +15,19 @@ public class SquatRepCounter {
 	public void start() {
 		modelEventManager.addListener(ModelEventType.SQUAT_ASCEND_START, new ModelEventListener() {
 			public void onEvent(Model m) {
-				System.out.println("Start ascention");
 				halfReps++;
 			}
 		});
 		
 		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_START, new ModelEventListener() {
 			public void onEvent(Model m) {
-				System.out.println("Start descention");
 				halfReps++;
 			}
 		});
 	}
 
 	public int getReps() {
+		// Integer division means reps rounded down, so only complete reps count
 		return halfReps / 2;
 	}
 }

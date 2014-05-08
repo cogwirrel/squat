@@ -36,9 +36,6 @@ public class SquatPipeline {
 	}
 	
 	public void process() {
-		int width = videoInput.getWidth();
-		int height = videoInput.getHeight();
-		
 		final Scalar modelColour = new Scalar(255,255,255);
 		
 		final ModelEventManager modelEventManager = new ModelEventManager();
@@ -83,8 +80,6 @@ public class SquatPipeline {
 			videoDisplay.draw();
 			squatSetup.update(readyFrame);
 		}
-		
-		System.out.println("Squat setup complete");
 		
 		// We have got to the point where the lifter is ready to squat
 		
