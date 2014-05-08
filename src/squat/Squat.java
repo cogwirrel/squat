@@ -33,7 +33,6 @@ public class Squat {
 	static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
 	
 	private static final int INIT_FITTING_ITERATIONS = 3;
-	private static final int FITTING_ITERATIONS = 2;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -142,25 +141,19 @@ public class Squat {
 		
 		// We have the initial model fitted
 		// Start the main squat analysis
-		squatScorer.start();
-		sqrc.start();
+		SquatTracker squatTracker = new SquatTracker(model, modelEventManager, bg);
+		squatTracker.start();
 		
 		// Main loop
-		while(videoInput.hasNextFrame()) {
+		while(videoInput.hasNextFrame() && !squatTracker.finished()) {
 			Mat frame = videoInput.getNextFrame();
 			
-			Mat foreground = bg.subtract(frame);
-			
-			for(int i = 0; i < FITTING_ITERATIONS; i++) {
-				fitter.fit(model, foreground);
-			}
+			squatTracker.update(frame);
 			
 			Mat m = new Mat(frame.size(), frame.type());
 			Mat m2 = new Mat(frame.size(), frame.type());
 			model.draw(m2, modelColour);
 			model.drawSkeleton(m, modelColour);
-			
-			modelEventManager.update(model);
 			
 			videoDisplay.show(VideoTools.blend(frame, m));
 			videoDisplay.draw();
@@ -172,12 +165,19 @@ public class Squat {
 			//frameNumber++;
 		}
 		
+		// Cycle through the last few frames
+		while(videoInput.hasNextFrame()) {
+			Mat frame = videoInput.getNextFrame();
+			videoDisplay.show(frame);
+			videoDisplay.draw();
+		}
+		
 		videoDisplay.close();
 		videoDisplay2.close();
 		
 		System.out.println("done");
-		System.out.println("Reps: " + sqrc.getReps());
-		System.out.println("Score: " + squatScorer.getScores());
+		System.out.println("Reps: " + squatTracker.getReps());
+		System.out.println("Score: " + squatTracker.getScores());
 
 	}
 
