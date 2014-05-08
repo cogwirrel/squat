@@ -1,4 +1,4 @@
-package squat;
+package squat.tracking;
 
 import java.util.List;
 

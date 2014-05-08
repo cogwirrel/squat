@@ -2,6 +2,8 @@ package squat;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+
+import squat.tracking.SquatPipeline;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoInput;
 

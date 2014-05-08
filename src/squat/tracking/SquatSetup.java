@@ -1,4 +1,4 @@
-package squat;
+package squat.tracking;
 
 import org.opencv.core.Mat;
 
