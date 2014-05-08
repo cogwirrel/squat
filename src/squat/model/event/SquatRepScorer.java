@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import squat.model.Model;
+import squat.utils.Pair;
 
 public class SquatRepScorer {
 	private SquatScorer scorer;
-	private List<Double> scores;
-	private List<String> mainContributors;
+	private List<Pair<Double,String>> scores;
 	private ModelEventManager modelEventManager;
 	private boolean stopped = false;
 	
 	public SquatRepScorer(final ModelEventManager modelEventManager) {
-		scores = new ArrayList<Double>();
-		mainContributors = new ArrayList<String>();
+		scores = new ArrayList<Pair<Double,String>>();
 		this.modelEventManager = modelEventManager;
 	}
 	
@@ -22,10 +21,7 @@ public class SquatRepScorer {
 		modelEventManager.addListener(ModelEventType.SQUAT_DESCEND_START, new ModelEventListener() {
 			public void onEvent(Model m) {
 				if(!stopped) {
-					if(scorer != null) {
-						scores.add(scorer.getCurrentScore());
-						mainContributors.add(scorer.getMainContributor());
-					}
+					addScore();
 					
 					scorer = new SquatScorer(modelEventManager);
 				}
@@ -33,20 +29,18 @@ public class SquatRepScorer {
 		});
 	}
 	
-	public void stop() {
-		stopped = true;
+	private void addScore() {
 		if(scorer != null) {
-			scores.add(scorer.getCurrentScore());
-			mainContributors.add(scorer.getMainContributor());
+			scores.add(new Pair<Double,String>(scorer.getCurrentScore(), scorer.getMainContributor()));
 		}
 	}
 	
-	public List<Double> getScores() {
-		int r = 0;
-		for(Double d : scores) {
-			r++;
-			System.out.println("Rep: " + r + " Score: " + d + " Problem: " + mainContributors.get(r-1));
-		}
+	public void stop() {
+		stopped = true;
+		addScore();
+	}
+	
+	public List<Pair<Double,String>> getScores() {
 		return scores;
 	}
 }

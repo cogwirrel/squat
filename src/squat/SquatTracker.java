@@ -12,6 +12,7 @@ import squat.optimization.ModelFitter;
 import squat.optimization.ModelFitterOptim;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.FixedQueue;
+import squat.utils.Pair;
 
 public class SquatTracker {
 	
@@ -55,6 +56,7 @@ public class SquatTracker {
 		
 		modelEventManager.update(model);
 		
+		// Check whether the foot has become unstuck - that means we've finished squatting
 		double[] footPosition = model.getInitParams();
 		int SIZE = 10;
 		boolean allPixelsInBoxEmpty = true;
@@ -80,7 +82,7 @@ public class SquatTracker {
 		return sqrc.getReps();
 	}
 	
-	public List<Double> getScores() {
+	public List<Pair<Double,String>> getScores() {
 		return squatScorer.getScores().subList(0, sqrc.getReps());
 	}
 }

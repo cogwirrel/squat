@@ -1,5 +1,7 @@
 package squat;
 
+import java.util.List;
+
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -17,6 +19,7 @@ import squat.optimization.ModelFitterOptim;
 import squat.optimization.ModelInitialisationFitterOptim;
 import squat.utils.BackgroundSubtractor;
 import squat.utils.BackgroundSubtractorNaive;
+import squat.utils.Pair;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoInput;
 import squat.utils.VideoTools;
@@ -145,10 +148,9 @@ public class SquatPipeline {
 
 		System.out.println("done");
 		System.out.println("Reps: " + squatTracker.getReps());
-		System.out.println("Score: " + squatTracker.getScores());
-	}
-	
-	public boolean completed() {
-		return completed;
+		List<Pair<Double,String>> scores = squatTracker.getScores();
+		for(int i = 0; i < scores.size(); i++) {
+			System.out.println("Rep " + (i+1) + " {Score: " + scores.get(i).l + "%, Problem: " + scores.get(i).r + "}");
+		}
 	}
 }
