@@ -2,31 +2,8 @@ package squat;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-
-import squat.model.AngularModel;
-import squat.model.Model;
-import squat.model.event.ModelEventListener;
-import squat.model.event.ModelEventManager;
-import squat.model.event.ModelEventType;
-import squat.model.event.SquatRepCounter;
-import squat.model.event.SquatRepScorer;
-import squat.model.event.SquatScorer;
-import squat.optimization.ModelFitter;
-import squat.optimization.ModelFitterManual;
-import squat.optimization.ModelFitterOptim;
-import squat.optimization.ModelInitialisationFitterOptim;
-import squat.utils.BackgroundSubtractor;
-import squat.utils.BackgroundSubtractorNaive;
-import squat.utils.FigureDetector;
 import squat.utils.VideoDisplay;
 import squat.utils.VideoInput;
-import squat.utils.VideoTools;
 
 public class Squat {
 
@@ -34,8 +11,12 @@ public class Squat {
 	
 
 	public static void main(String[] args) throws Exception {
-		
-		VideoInput videoInput = new VideoInput("/home/jack/squat_vids/stable/good_squats.avi", true);
+		processVideo("/home/jack/squat_vids/stable/good_squats.avi");
+		processVideo("/home/jack/squat_vids/stable/good_squat_single.avi");
+	}
+	
+	public static void processVideo(String name) throws Exception {
+		VideoInput videoInput = new VideoInput(name, true);
 		VideoDisplay videoDisplay = new VideoDisplay("Display", videoInput.getWidth(), videoInput.getHeight());
 		
 		SquatPipeline squatPipeline = new SquatPipeline(videoInput, videoDisplay);
