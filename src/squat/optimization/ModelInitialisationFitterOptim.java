@@ -21,8 +21,6 @@ public class ModelInitialisationFitterOptim implements ModelFitter {
 		
 		MultivariateOptimizer optim = new BOBYQAOptimizer(2*model.getInitParams().length);
 		
-		System.out.println(frame.cols() + " ---  " + frame.rows());
-		
 		try {
 			PointValuePair p = optim.optimize(
 					new InitialGuess(model.getInitParams()),
@@ -34,7 +32,6 @@ public class ModelInitialisationFitterOptim implements ModelFitter {
 				
 				double[] results = p.getPoint();
 				model.setInitParams(results);
-				System.out.println(results[0]);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
