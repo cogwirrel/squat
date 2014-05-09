@@ -69,6 +69,10 @@ public class VideoTools {
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Imgproc.findContours(frame, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 		
+		if(contours.isEmpty()) {
+			return null;
+		}
+		
 		int largestContourIdx = largestContourIndex(contours);
 		
 		//Mat drawing = Mat.zeros(frame.size(), frame.type());

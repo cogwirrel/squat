@@ -61,7 +61,9 @@ public class SquatTracker {
 		for(int i = (int)footPosition[1] - SIZE; i < (int)footPosition[1] + SIZE; i++) {
 			for(int j = (int)footPosition[0] - SIZE; j < (int)footPosition[0] + SIZE; j++) {
 				double[] pix = foreground.get(i, j);
-				allPixelsInBoxEmpty &= pix[0] < 1;
+				if(pix != null && pix.length > 0) {
+					allPixelsInBoxEmpty &= pix[0] < 1;
+				}
 			}
 		}
 

@@ -9,8 +9,8 @@ import squat.utils.VideoTools;
 
 public class SquatSetup {
 	private static final int FRAME_SKIP = 3;
-	private static final int NUM_DIFFERENCES = 6;
-	private static final double MOTION_THRESHOLD = 0.5;
+	private static final int NUM_DIFFERENCES = 8;
+	private static final double MOTION_THRESHOLD = 1;
 	
 	private BackgroundSubtractor bg;
 	private FigureDetector figureDetector;

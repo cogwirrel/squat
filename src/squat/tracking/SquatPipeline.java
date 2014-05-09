@@ -16,6 +16,7 @@ import squat.model.event.ModelEventType;
 import squat.optimization.ModelFitter;
 import squat.optimization.ModelInitialisationFitterOptim;
 import squat.utils.BackgroundSubtractor;
+import squat.utils.BackgroundSubtractorAdvanced;
 import squat.utils.BackgroundSubtractorNaive;
 import squat.utils.Value;
 import squat.utils.VideoDisplay;
@@ -42,7 +43,7 @@ public class SquatPipeline {
 			firstFrame = videoInput.getNextFrame();
 		}
 		
-		BackgroundSubtractor bg = new BackgroundSubtractorNaive(firstFrame, 30);
+		BackgroundSubtractor bg = new BackgroundSubtractorAdvanced(firstFrame, 30);
 		
 		SquatSetup squatSetup = new SquatSetup(bg, firstFrame);
 		Mat readyFrame = new Mat();
