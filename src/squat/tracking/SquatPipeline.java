@@ -43,6 +43,8 @@ public class SquatPipeline {
 			firstFrame = videoInput.getNextFrame();
 		}
 		
+		VideoDisplay debugDisplay = new VideoDisplay("Debug", videoInput.getWidth(), videoInput.getHeight());
+		
 		BackgroundSubtractor bg = new BackgroundSubtractorAdvanced(firstFrame, 30);
 		
 		SquatSetup squatSetup = new SquatSetup(bg, firstFrame);
@@ -52,6 +54,8 @@ public class SquatPipeline {
 			videoDisplay.show(readyFrame);
 			videoDisplay.draw();
 			squatSetup.update(readyFrame);
+			debugDisplay.show(bg.subtract(readyFrame));
+			debugDisplay.draw();
 		}
 		
 		listener.onReadyToSquat();
@@ -157,7 +161,12 @@ public class SquatPipeline {
 			
 			videoDisplay.show(VideoTools.blend(frame, m));
 			videoDisplay.draw();
+			
+			debugDisplay.show(bg.subtract(frame));
+			debugDisplay.draw();
 		}
+		
+		debugDisplay.close();
 		
 		squatTracker.stop();
 		
