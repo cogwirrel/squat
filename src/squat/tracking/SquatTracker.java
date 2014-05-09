@@ -15,7 +15,7 @@ import squat.utils.Pair;
 public class SquatTracker {
 	
 	private static final int FITTING_ITERATIONS = 2;
-	private static final int FOOT_MOVEMENT_FRAMES = 5;
+	private static final int FOOT_MOVEMENT_FRAMES = 10;
 	
 	private ModelFitter fitter;
 	private SquatRepScorer squatScorer;
@@ -60,7 +60,7 @@ public class SquatTracker {
 		boolean allPixelsInBoxEmpty = true;
 		for(int i = (int)footPosition[1] - SIZE; i < (int)footPosition[1] + SIZE; i++) {
 			for(int j = (int)footPosition[0] - SIZE; j < (int)footPosition[0] + SIZE; j++) {
-				double[] pix = foreground.get((int)footPosition[1], (int)footPosition[0]);
+				double[] pix = foreground.get(i, j);
 				allPixelsInBoxEmpty &= pix[0] < 1;
 			}
 		}
