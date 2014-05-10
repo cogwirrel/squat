@@ -9,6 +9,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class VideoTools {
@@ -104,5 +105,13 @@ public class VideoTools {
 			//e.printStackTrace();
 		}
 		return overlap;
+	}
+	
+	public static Mat rotate(Mat frame, double angle) {
+		Point centre = new Point(frame.cols() / 2, frame.rows() / 2);
+		Mat r = Imgproc.getRotationMatrix2D(centre, angle, 1);
+		Mat rotated = new Mat();
+		Imgproc.warpAffine(frame, rotated, r, new Size(frame.rows(), frame.cols()));
+		return rotated;
 	}
 }
